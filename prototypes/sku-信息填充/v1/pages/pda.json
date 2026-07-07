@@ -1,0 +1,22 @@
+{
+  "pattern": "sku-fill-pda-task",
+  "title": "SKU 信息补充任务",
+  "pageMode": "pda",
+  "header": {
+    "brand": "ELSA PDA"
+  },
+  "formActions": [
+    {
+      "label": "暂存",
+      "variant": "secondary",
+      "icon": "fas fa-save",
+      "action": "saveDraft"
+    },
+    {
+      "label": "提交",
+      "variant": "primary",
+      "icon": "fas fa-paper-plane",
+      "action": "submit"
+    }
+  ]
+}

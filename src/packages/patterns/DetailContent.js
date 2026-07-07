@@ -1,0 +1,33 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { Badge } from '@prototype/ui';
+import { reviewTarget } from '../../lib/reviewLink';
+import { FaIcon } from '@prototype/ui/Icon';
+export function DetailContent({ detail, statusLabels }) {
+    return (_jsx("div", { className: "space-y-6", children: detail.sections.map((section) => (_jsx(DetailSectionBlock, { section: section, statusLabels: statusLabels }, section.title))) }));
+}
+function DetailSectionBlock({ section, statusLabels, }) {
+    return (_jsxs("div", { ...reviewTarget('list.detail-modal', section.title), children: [_jsxs("h4", { className: "font-semibold text-primary mb-3", children: [_jsx(FaIcon, { className: `fas ${section.icon} mr-2 text-accent` }), section.title] }), section.layout === 'grid' && section.items && (_jsx(InfoGrid, { items: section.items, statusLabels: statusLabels })), section.layout === 'fee-list' && section.feeGroups && _jsx(FeeList, { groups: section.feeGroups }), section.layout === 'adjust-list' && (_jsx(AdjustList, { items: section.adjustments ?? [] })), section.layout === 'zone-price-table' && section.zonePriceTable && (_jsx(ZonePriceTableEditor, { table: section.zonePriceTable }))] }));
+}
+function InfoGrid({ items, statusLabels, }) {
+    return (_jsx("div", { className: "grid grid-cols-2 gap-4", children: items.map((item) => (_jsxs("div", { className: "bg-light-bg rounded-lg p-3", children: [_jsx("div", { className: "text-xs text-text-muted mb-1", children: item.label }), _jsx("div", { className: "font-medium text-dark", children: item.type === 'status' ? (_jsx(Badge, { status: item.value, label: statusLabels?.[item.value] })) : item.type === 'badge' ? (_jsx("span", { className: `inline-flex px-2 py-1 rounded-full text-xs font-semibold ${item.badgeClass}`, children: item.value })) : (item.value) })] }, item.label))) }));
+}
+function FeeList({ groups }) {
+    if (!groups.length)
+        return _jsx("p", { className: "text-sm text-text-muted", children: "\u65E0\u8D39\u7528\u9879\u6298\u6263" });
+    return (_jsx("div", { className: "space-y-4", children: groups.map((group) => (_jsxs("div", { children: [_jsxs("h5", { className: "text-sm font-semibold text-primary mb-2", children: [group.icon && _jsx(FaIcon, { className: `fas ${group.icon} mr-1 text-accent` }), group.name, "\uFF08", group.items.length, "\u9879\uFF09"] }), _jsx("div", { className: "space-y-2", children: group.items.map((item) => (_jsx(FeeItem, { item: item }, item.name))) })] }, group.name))) }));
+}
+function FeeItem({ item }) {
+    return (_jsx("div", { className: "bg-white border border-border rounded-lg p-3", children: _jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [item.subCategory && _jsx("span", { className: "text-xs text-text-muted", children: item.subCategory }), _jsx("div", { className: "font-medium text-dark", children: item.name })] }), _jsxs("div", { className: "text-right", children: [_jsx("div", { className: "text-sm font-semibold text-primary", children: item.discount }), item.description && _jsx("div", { className: "text-xs text-text-muted", children: item.description })] })] }) }));
+}
+function AdjustList({ items }) {
+    if (!items.length)
+        return _jsx("p", { className: "text-sm text-text-muted", children: "\u65E0\u589E\u51CF\u9879" });
+    return (_jsx("div", { className: "space-y-2", children: items.map((a) => {
+            const isAdd = a.type === 'add';
+            return (_jsxs("div", { className: "bg-white border border-border rounded-lg p-3", children: [_jsxs("div", { className: "flex items-center justify-between", children: [_jsxs("div", { children: [_jsx("span", { className: `inline-flex px-2 py-1 rounded-full text-xs font-semibold ${isAdd ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`, children: isAdd ? '增项' : '减项' }), _jsx("span", { className: "font-medium text-dark ml-2", children: a.name })] }), _jsxs("div", { className: `text-sm font-semibold ${isAdd ? 'text-green-600' : 'text-red-600'}`, children: [isAdd ? '+' : '-', "\u00A5", a.amount] })] }), a.description && _jsx("div", { className: "text-sm text-text-secondary mt-1", children: a.description })] }, a.name));
+        }) }));
+}
+function ZonePriceTableEditor({ table }) {
+    const { zones, weightSegments, prices, currency = 'USD', priceUnit = 'lb' } = table;
+    return (_jsxs("div", { className: "overflow-x-auto", children: [_jsxs("div", { className: "mb-4 flex gap-2", children: [_jsxs("button", { className: "px-3 py-1.5 bg-accent text-white rounded-lg text-sm font-medium", children: [_jsx(FaIcon, { className: "fas fa-plus mr-1" }), " \u6DFB\u52A0\u91CD\u91CF\u6BB5"] }), _jsxs("button", { className: "px-3 py-1.5 bg-light-bg text-text-secondary rounded-lg text-sm font-medium border border-border", children: [_jsx(FaIcon, { className: "fas fa-download mr-1" }), " \u5BFC\u51FA\u8868\u683C"] })] }), _jsxs("table", { className: "w-full border-collapse", children: [_jsx("thead", { children: _jsxs("tr", { className: "bg-light-bg", children: [_jsxs("th", { className: "border border-border px-3 py-2 text-left text-sm font-semibold text-primary", children: ["\u91CD\u91CF\u6BB5 (", priceUnit, ")"] }), zones.map((zone) => (_jsx("th", { className: "border border-border px-3 py-2 text-center text-sm font-semibold text-primary", children: zone }, zone))), _jsx("th", { className: "border border-border px-3 py-2 text-center text-sm font-semibold text-primary", children: "\u64CD\u4F5C" })] }) }), _jsx("tbody", { children: weightSegments.map((segment, rowIndex) => (_jsxs("tr", { className: "bg-white hover:bg-light-bg transition-colors", children: [_jsxs("td", { className: "border border-border px-3 py-2 text-sm text-dark", children: [_jsxs("span", { className: "text-text-muted", children: ["[", segment.start, ","] }), " ", segment.end, _jsx("span", { className: "text-text-muted", children: ")" })] }), zones.map((zone) => (_jsx("td", { className: "border border-border px-3 py-2 text-center", children: _jsx("input", { type: "number", defaultValue: prices[zone]?.[rowIndex] ?? 0, step: "0.01", className: "w-20 text-center border border-border rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-accent" }) }, zone))), _jsx("td", { className: "border border-border px-3 py-2 text-center", children: _jsx("button", { className: "text-red-500 hover:text-red-700 text-sm", children: _jsx(FaIcon, { className: "fas fa-trash" }) }) })] }, rowIndex))) })] }), _jsxs("div", { className: "mt-2 text-xs text-text-muted", children: ["\u5355\u4EF7\u5355\u4F4D\uFF1A", currency, "/", priceUnit, " \u00B7 \u91CD\u91CF\u6BB5\u533A\u95F4\u4E3A\u5DE6\u95ED\u53F3\u5F00"] })] }));
+}

@@ -1,0 +1,36 @@
+# === 本地运行产物（不提交）===
+node_modules/
+dist/*
+!dist/publish-viewer/
+!dist/publish-viewer/**
+data/
+settings.json
+.DS_Store
+.env
+.prototypes/
+
+# === 源码格式（禁止提交）===
+**/*.ts
+**/*.tsx
+**/*.mts
+**/*.cts
+**/*.jsx.map
+**/*.js.map
+**/*.d.ts
+**/tsconfig*.json
+vite.config.ts
+vite.publish.config.ts
+tsconfig.release.json
+
+# === 开发脚本（非运行时，禁止提交）===
+scripts/migrate-*.mjs
+scripts/fix-*.mjs
+scripts/validate-*.mjs
+scripts/test-*.mjs
+scripts/delete-project.mjs
+scripts/generate-*.ts
+scripts/review-*.ts
+scripts/validate-*.ts
+
+# === 构建临时文件 ===
+.tmp-git-preserve/

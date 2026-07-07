@@ -1,0 +1,239 @@
+{
+  "pattern": "rule-config-list",
+  "title": "基础价列表",
+  "filters": [
+    {
+      "id": "channel",
+      "label": "渠道",
+      "type": "select",
+      "options": [
+        { "value": "ups-freight", "label": "UPS-Freight" },
+        { "value": "fedex-ground", "label": "FedEx-Ground" },
+        { "value": "dhl-express", "label": "DHL-Express" }
+      ]
+    },
+    {
+      "id": "carrier",
+      "label": "承运商",
+      "type": "select",
+      "options": [
+        { "value": "ups", "label": "UPS" },
+        { "value": "fedex", "label": "FedEx" },
+        { "value": "dhl", "label": "DHL" }
+      ]
+    },
+    {
+      "id": "warehouse",
+      "label": "仓库",
+      "type": "select",
+      "options": [
+        { "value": "la", "label": "DEMO" },
+        { "value": "ny", "label": "DE001" },
+        { "value": "chicago", "label": "MD001" }
+      ]
+    },
+    {
+      "id": "feeType",
+      "label": "费用类型",
+      "type": "select",
+      "options": [
+        { "value": "all", "label": "全部" },
+        { "value": "base", "label": "基础价" },
+        { "value": "surcharge", "label": "附加费" },
+        { "value": "other", "label": "其他费用" }
+      ]
+    },
+    {
+      "id": "createdBy",
+      "label": "创建人",
+      "type": "text",
+      "placeholder": "输入创建人名称"
+    }
+  ],
+  "table": {
+    "columns": [
+      { "key": "name", "label": "名称" },
+      { "key": "channel", "label": "渠道" },
+      { "key": "carrier", "label": "承运商" },
+      { "key": "warehouse", "label": "仓库" },
+      { "key": "feeType", "label": "费用类型" },
+      { "key": "creator", "label": "创建人/时间" },
+      { "key": "updater", "label": "更新人/时间" },
+      { "key": "actions", "label": "操作" }
+    ],
+    "rows": [
+      {
+        "id": "sf-001",
+        "cells": {
+          "name": { "primary": "UPS 美西基础价" },
+          "channel": { "primary": "UPS-Freight" },
+          "carrier": { "primary": "UPS" },
+          "warehouse": { "primary": "DEMO" },
+          "feeType": { "primary": "基础价" },
+          "creator": { "primary": "张三", "secondary": "2026-07-01 10:30" },
+          "updater": { "primary": "张三", "secondary": "2026-07-02 14:20" }
+        },
+        "actions": ["view", "edit", "copy", "delete"]
+      },
+      {
+        "id": "sf-002",
+        "cells": {
+          "name": { "primary": "FedEx 美东基础价" },
+          "channel": { "primary": "FedEx-Ground" },
+          "carrier": { "primary": "FedEx" },
+          "warehouse": { "primary": "DE001" },
+          "feeType": { "primary": "基础价" },
+          "creator": { "primary": "李四", "secondary": "2026-07-02 09:15" },
+          "updater": { "primary": "李四", "secondary": "2026-07-02 16:45" }
+        },
+        "actions": ["view", "edit", "copy", "delete"]
+      },
+      {
+        "id": "sf-003",
+        "cells": {
+          "name": { "primary": "DHL 中部基础价" },
+          "channel": { "primary": "DHL-Express" },
+          "carrier": { "primary": "DHL" },
+          "warehouse": { "primary": "MD001" },
+          "feeType": { "primary": "基础价" },
+          "creator": { "primary": "王五", "secondary": "2026-07-03 11:00" },
+          "updater": { "primary": "王五", "secondary": "2026-07-03 11:00" }
+        },
+        "actions": ["view", "edit", "copy", "delete"]
+      },
+      {
+        "id": "sf-004",
+        "cells": {
+          "name": { "primary": "UPS 附加费" },
+          "channel": { "primary": "UPS-Freight" },
+          "carrier": { "primary": "UPS" },
+          "warehouse": { "primary": "DEMO" },
+          "feeType": { "primary": "附加费" },
+          "creator": { "primary": "张三", "secondary": "2026-07-04 09:00" },
+          "updater": { "primary": "张三", "secondary": "2026-07-04 15:30" }
+        },
+        "actions": ["view", "edit", "copy", "delete"]
+      },
+      {
+        "id": "sf-005",
+        "cells": {
+          "name": { "primary": "FedEx 其他费用" },
+          "channel": { "primary": "FedEx-Ground" },
+          "carrier": { "primary": "FedEx" },
+          "warehouse": { "primary": "DE001" },
+          "feeType": { "primary": "其他费用" },
+          "creator": { "primary": "李四", "secondary": "2026-07-04 10:00" },
+          "updater": { "primary": "李四", "secondary": "2026-07-04 10:00" }
+        },
+        "actions": ["view", "edit", "copy", "delete"]
+      }
+    ]
+  },
+  "details": {
+    "sf-001": {
+      "title": "基础价详情",
+      "sections": [
+        {
+          "title": "基本信息",
+          "icon": "fa-info-circle",
+          "layout": "grid",
+          "items": [
+            { "label": "名称", "value": "UPS 美西基础价" },
+            { "label": "渠道", "value": "UPS-Freight" },
+            { "label": "承运商", "value": "UPS" },
+            { "label": "仓库", "value": "DE" },
+            { "label": "费用类型", "value": "基础价" },
+            { "label": "创建人", "value": "张三" },
+            { "label": "创建时间", "value": "2026-07-01 10:30" },
+            { "label": "更新人", "value": "张三" },
+            { "label": "更新时间", "value": "2026-07-02 14:20" }
+          ]
+        }
+      ]
+    },
+    "sf-002": {
+      "title": "基础价详情",
+      "sections": [
+        {
+          "title": "基本信息",
+          "icon": "fa-info-circle",
+          "layout": "grid",
+          "items": [
+            { "label": "名称", "value": "FedEx 美东基础价" },
+            { "label": "渠道", "value": "FedEx-Ground" },
+            { "label": "承运商", "value": "FedEx" },
+            { "label": "仓库", "value": "DEMO" },
+            { "label": "费用类型", "value": "基础价" },
+            { "label": "创建人", "value": "李四" },
+            { "label": "创建时间", "value": "2026-07-02 09:15" },
+            { "label": "更新人", "value": "李四" },
+            { "label": "更新时间", "value": "2026-07-02 16:45" }
+          ]
+        }
+      ]
+    },
+    "sf-003": {
+      "title": "基础价详情",
+      "sections": [
+        {
+          "title": "基本信息",
+          "icon": "fa-info-circle",
+          "layout": "grid",
+          "items": [
+            { "label": "名称", "value": "DHL 中部基础价" },
+            { "label": "渠道", "value": "DHL-Express" },
+            { "label": "承运商", "value": "DHL" },
+            { "label": "仓库", "value": "DEMO" },
+            { "label": "费用类型", "value": "基础价" },
+            { "label": "创建人", "value": "王五" },
+            { "label": "创建时间", "value": "2026-07-03 11:00" },
+            { "label": "更新人", "value": "王五" },
+            { "label": "更新时间", "value": "2026-07-03 11:00" }
+          ]
+        }
+      ]
+    },
+    "sf-004": {
+      "title": "附加费详情",
+      "sections": [
+        {
+          "title": "基本信息",
+          "icon": "fa-info-circle",
+          "layout": "grid",
+          "items": [
+            { "label": "名称", "value": "UPS 附加费" },
+            { "label": "渠道", "value": "UPS-Freight" },
+            { "label": "承运商", "value": "UPS" },
+            { "label": "仓库", "value": "DEMO" },
+            { "label": "费用类型", "value": "附加费" },
+            { "label": "创建人", "value": "张三" },
+            { "label": "创建时间", "value": "2026-07-04 09:00" },
+            { "label": "更新人", "value": "张三" },
+            { "label": "更新时间", "value": "2026-07-04 15:30" }
+          ]
+        }
+      ]
+    },
+    "sf-005": {
+      "title": "其他费用详情",
+      "sections": [
+        {
+          "title": "基本信息",
+          "icon": "fa-info-circle",
+          "layout": "grid",
+          "items": [
+            { "label": "名称", "value": "FedEx 其他费用" },
+            { "label": "渠道", "value": "FedEx-Ground" },
+            { "label": "承运商", "value": "FedEx" },
+            { "label": "仓库", "value": "DE001" },
+            { "label": "费用类型", "value": "其他费用" },
+            { "label": "创建人", "value": "李四" },
+            { "label": "创建时间", "value": "2026-07-04 10:00" },
+            { "label": "更新人", "value": "李四" },
+            { "label": "更新时间", "value": "2026-07-04 10:00" }
+          ]
+        }
+      ]
+    }
+  }
+}

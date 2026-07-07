@@ -1,0 +1,13 @@
+{
+  "id": "sku-fill",
+  "version": "v1",
+  "title": "SKU 信息填充",
+  "project": "sku-信息填充",
+  "type": "flow",
+  "mode": "spec",
+  "designSystem": "elsa-enterprise",
+  "author": "产品团队",
+  "createdAt": "2026-07-06",
+  "changeSummary": "列表新增导入导出；单工单仅绑定 1 个 SKU；删除订单号关联",
+  "status": "draft"
+}

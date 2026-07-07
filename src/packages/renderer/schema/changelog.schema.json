@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "prototype-changelog-schema",
+  "title": "Prototype Changelog",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["version", "date", "title", "changes"],
+    "additionalProperties": false,
+    "properties": {
+      "version": { "type": "string" },
+      "date": { "type": "string" },
+      "title": { "type": "string" },
+      "changes": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["item", "desc"],
+          "additionalProperties": false,
+          "properties": {
+            "item": { "type": "string" },
+            "desc": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

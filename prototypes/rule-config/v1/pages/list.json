@@ -1,0 +1,196 @@
+{
+  "pattern": "rule-config-list",
+  "title": "规则配置列表",
+  "filters": [
+    {
+      "id": "customer",
+      "label": "客户",
+      "type": "select",
+      "options": [
+        { "value": "c1", "label": "客户A" },
+        { "value": "c2", "label": "客户B" }
+      ]
+    },
+    {
+      "id": "effectiveStatus",
+      "label": "生效状态",
+      "type": "select",
+      "options": [
+        { "value": "all", "label": "全部" },
+        { "value": "active", "label": "生效中" },
+        { "value": "future", "label": "待生效" },
+        { "value": "expired", "label": "已过期" },
+        { "value": "unpublished", "label": "未发布" }
+      ]
+    },
+    {
+      "id": "createdBy",
+      "label": "创建人",
+      "type": "text",
+      "placeholder": "输入创建人名称"
+    },
+    {
+      "id": "createTimeStart",
+      "label": "创建时间(开始)",
+      "type": "datetime",
+      "placeholder": "开始时间"
+    },
+    {
+      "id": "createTimeEnd",
+      "label": "创建时间(结束)",
+      "type": "datetime",
+      "placeholder": "结束时间"
+    },
+    {
+      "id": "updatedBy",
+      "label": "更新人",
+      "type": "text",
+      "placeholder": "输入更新人名称"
+    },
+    {
+      "id": "updateTimeStart",
+      "label": "更新时间(开始)",
+      "type": "datetime",
+      "placeholder": "开始时间"
+    },
+    {
+      "id": "updateTimeEnd",
+      "label": "更新时间(结束)",
+      "type": "datetime",
+      "placeholder": "结束时间"
+    }
+  ],
+  "table": {
+    "tree": true,
+    "defaultExpand": false,
+    "columns": [
+      { "key": "name", "label": "配置名称" },
+      { "key": "effectiveStatus", "label": "生效状态" },
+      { "key": "customer", "label": "客户" },
+      { "key": "period", "label": "生效周期" },
+      { "key": "createdBy", "label": "创建人" },
+      { "key": "createdAt", "label": "创建时间" },
+      { "key": "updatedBy", "label": "更新人" },
+      { "key": "updatedAt", "label": "更新时间" },
+      { "key": "actions", "label": "操作" }
+    ],
+    "rows": [
+      {
+        "id": "group-c1",
+        "rowType": "group",
+        "cells": {
+          "name": { "primary": "客户A", "secondary": "共 4 个有效期" },
+          "customer": { "primary": "客户A", "secondary": "CUST-A" }
+        },
+        "children": [
+          {
+            "id": "rc-001",
+            "rowType": "leaf",
+            "status": "published",
+            "cells": {
+              "name": { "primary": "客户A-规则配置", "secondary": "ID: rc-001 · v3" },
+              "effectiveStatus": "生效中",
+              "customer": { "primary": "客户A", "secondary": "CUST-A" },
+              "period": { "primary": "2026-01-01 00:00", "secondary": "至 2026-12-31 23:59:59" },
+              "createdBy": { "primary": "张三" },
+              "createdAt": { "primary": "2026-06-15 10:30:00" },
+              "updatedBy": { "primary": "李四" },
+              "updatedAt": { "primary": "2026-07-01 09:15:00" }
+            },
+            "actions": ["view", "void"]
+          },
+          {
+            "id": "rc-004",
+            "rowType": "leaf",
+            "status": "published",
+            "cells": {
+              "name": { "primary": "客户A-规则配置（2027）", "secondary": "ID: rc-004 · v4" },
+              "effectiveStatus": "待生效",
+              "customer": { "primary": "客户A", "secondary": "CUST-A" },
+              "period": { "primary": "2027-01-01 00:00", "secondary": "至 2027-12-31 23:59:59" },
+              "createdBy": { "primary": "张三" },
+              "createdAt": { "primary": "2026-06-20 16:00:00" },
+              "updatedBy": { "primary": "张三" },
+              "updatedAt": { "primary": "2026-06-25 11:30:00" }
+            },
+            "actions": ["view", "void"]
+          },
+          {
+            "id": "rc-003",
+            "rowType": "leaf",
+            "status": "voided",
+            "cells": {
+              "name": { "primary": "客户A-规则配置（旧）", "secondary": "ID: rc-003" },
+              "effectiveStatus": "已过期",
+              "customer": { "primary": "客户A", "secondary": "CUST-A" },
+              "period": { "primary": "2025-01-01 00:00", "secondary": "至 2025-12-31 23:59:59" },
+              "createdBy": { "primary": "王五" },
+              "createdAt": { "primary": "2025-06-01 09:00:00" },
+              "updatedBy": { "primary": "张三" },
+              "updatedAt": { "primary": "2025-12-20 16:45:00" }
+            },
+            "actions": ["view", "copy"]
+          },
+          {
+            "id": "rc-006",
+            "rowType": "leaf",
+            "status": "draft",
+            "cells": {
+              "name": { "primary": "客户A-规则配置（冲突样例）", "secondary": "ID: rc-006" },
+              "effectiveStatus": "未发布",
+              "customer": { "primary": "客户A", "secondary": "CUST-A" },
+              "period": { "primary": "2026-06-01 00:00", "secondary": "至 2026-12-31 23:59:59 · 发布后截断 rc-001" },
+              "createdBy": { "primary": "李四" },
+              "createdAt": { "primary": "2026-07-05 10:00:00" },
+              "updatedBy": { "primary": "李四" },
+              "updatedAt": { "primary": "2026-07-05 10:00:00" }
+            },
+            "actions": ["view", "edit", "publish", "delete"]
+          }
+        ]
+      },
+      {
+        "id": "group-c2",
+        "rowType": "group",
+        "cells": {
+          "name": { "primary": "客户B", "secondary": "共 1 个有效期" },
+          "customer": { "primary": "客户B", "secondary": "CUST-B" }
+        },
+        "children": [
+          {
+            "id": "rc-002",
+            "rowType": "leaf",
+            "status": "draft",
+            "cells": {
+              "name": { "primary": "客户B-规则配置", "secondary": "ID: rc-002" },
+              "effectiveStatus": "未发布",
+              "customer": { "primary": "客户B", "secondary": "CUST-B" },
+              "period": { "primary": "2026-07-01 00:00", "secondary": "至 2027-06-30 23:59:59" },
+              "createdBy": { "primary": "李四" },
+              "createdAt": { "primary": "2026-07-01 14:20:00" },
+              "updatedBy": { "primary": "-" },
+              "updatedAt": { "primary": "-" }
+            },
+            "actions": ["view", "edit", "publish", "delete"]
+          }
+        ]
+      }
+    ]
+  },
+  "publishMeta": {
+    "rc-006": {
+      "autoTruncate": {
+        "id": "rc-001",
+        "name": "客户A-规则配置",
+        "currentEndTime": "2026-12-31 23:59:59",
+        "newEndTime": "2026-05-31 23:59:59"
+      }
+    }
+  },
+  "rowActions": {
+    "view": {
+      "label": "查看",
+      "action": "navigate('detail')"
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "price-card-management",
+  "version": "v1",
+  "title": "价卡管理",
+  "project": "价卡管理",
+  "type": "flow",
+  "mode": "spec",
+  "designSystem": "elsa-enterprise",
+  "author": "产品团队",
+  "createdAt": "2026-07-05",
+  "changeSummary": "迁移现有价卡管理系统到原型系统，包含列表、创建、编辑、费用维护等功能",
+  "status": "draft"
+}

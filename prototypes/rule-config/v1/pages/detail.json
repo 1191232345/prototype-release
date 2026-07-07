@@ -1,0 +1,269 @@
+{
+  "pattern": "rule-config-detail",
+  "title": "规则配置详情",
+  "sections": [
+    {
+      "title": "基础配置",
+      "icon": "fas fa-link",
+      "layout": "grid",
+      "items": [
+        { "label": "客户代码", "value": "客户A (CUST-A)" }
+      ]
+    },
+    {
+      "title": "仓库信息",
+      "icon": "fa-warehouse",
+      "layout": "grid",
+      "items": [
+        { "label": "仓库名称", "value": "洛杉矶仓" },
+        { "label": "仓库代码", "value": "US-LA" },
+        { "label": "配置摘要", "value": "快递 3 项 · 库内 5 项 · 其他 0 项" }
+      ]
+    },
+    {
+      "title": "快递费配置",
+      "icon": "fa-truck",
+      "tabs": [
+        {
+          "label": "基础费",
+          "icon": "fa-money-bill-wave",
+          "content": {
+            "table": {
+              "columns": [
+                { "key": "feeRuleName", "label": "费用名称" },
+                { "key": "unit", "label": "计费单位" },
+                { "key": "discountType", "label": "折扣方式" },
+                { "key": "discountValue", "label": "折扣值" },
+                { "key": "remark", "label": "备注" }
+              ],
+              "rows": [
+                { "feeRuleName": "UPS 美西基础价", "unit": "每公斤", "discountType": "折扣率", "discountValue": "100%", "remark": "" }
+              ]
+            }
+          }
+        },
+        {
+          "label": "附加费",
+          "icon": "fa-plus-circle",
+          "content": {
+            "table": {
+              "columns": [
+                { "key": "feeRuleName", "label": "费用名称" },
+                { "key": "unit", "label": "计费单位" },
+                { "key": "discountType", "label": "折扣方式" },
+                { "key": "discountValue", "label": "折扣值" },
+                { "key": "remark", "label": "备注" }
+              ],
+              "rows": [
+                { "feeRuleName": "燃油附加费", "unit": "每单", "discountType": "折扣率", "discountValue": "100%", "remark": "" }
+              ]
+            }
+          }
+        },
+        {
+          "label": "其他费用",
+          "icon": "fa-file-invoice-dollar",
+          "content": {
+            "table": {
+              "columns": [
+                { "key": "feeRuleName", "label": "费用名称" },
+                { "key": "unit", "label": "计费单位" },
+                { "key": "discountType", "label": "折扣方式" },
+                { "key": "discountValue", "label": "折扣值" },
+                { "key": "remark", "label": "备注" }
+              ],
+              "rows": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "库内费用配置",
+      "icon": "fa-warehouse",
+      "tabs": [
+        {
+          "label": "卸货费",
+          "icon": "fa-box-open",
+          "content": {
+            "table": {
+              "columns": [
+                { "key": "feeRuleName", "label": "费用名称" },
+                { "key": "unit", "label": "计费单位" },
+                { "key": "discountType", "label": "折扣方式" },
+                { "key": "discountValue", "label": "折扣值" },
+                { "key": "remark", "label": "备注" }
+              ],
+              "rows": [
+                { "feeRuleName": "整柜入库-卸货费", "unit": "每柜", "discountType": "折扣率", "discountValue": "90%", "remark": "" }
+              ]
+            }
+          }
+        },
+        {
+          "label": "仓储费",
+          "icon": "fa-warehouse-alt",
+          "content": {
+            "table": {
+              "columns": [
+                { "key": "feeRuleName", "label": "费用名称" },
+                { "key": "unit", "label": "计费单位" },
+                { "key": "discountType", "label": "折扣方式" },
+                { "key": "discountValue", "label": "折扣值" },
+                { "key": "remark", "label": "备注" }
+              ],
+              "rows": [
+                { "feeRuleName": "仓储费-月租", "unit": "每平方米/月", "discountType": "折扣率", "discountValue": "100%", "remark": "" }
+              ]
+            }
+          }
+        },
+        {
+          "label": "出库（一件代发）",
+          "icon": "fa-parachute-box",
+          "content": {
+            "table": {
+              "columns": [
+                { "key": "feeRuleName", "label": "费用名称" },
+                { "key": "unit", "label": "计费单位" },
+                { "key": "discountType", "label": "折扣方式" },
+                { "key": "discountValue", "label": "折扣值" },
+                { "key": "remark", "label": "备注" }
+              ],
+              "rows": [
+                { "feeRuleName": "出库费（一件代发）-拣货费", "unit": "每件", "discountType": "折扣率", "discountValue": "95%", "remark": "" }
+              ]
+            }
+          }
+        },
+        {
+          "label": "出库（中转）",
+          "icon": "fa-exchange-alt",
+          "content": {
+            "table": {
+              "columns": [
+                { "key": "feeRuleName", "label": "费用名称" },
+                { "key": "unit", "label": "计费单位" },
+                { "key": "discountType", "label": "折扣方式" },
+                { "key": "discountValue", "label": "折扣值" },
+                { "key": "remark", "label": "备注" }
+              ],
+              "rows": [
+                { "feeRuleName": "出库费（中转）-处理费", "unit": "每托", "discountType": "折扣率", "discountValue": "100%", "remark": "" }
+              ]
+            }
+          }
+        },
+        {
+          "label": "增值服务",
+          "icon": "fa-concierge-bell",
+          "content": {
+            "table": {
+              "columns": [
+                { "key": "feeRuleName", "label": "费用名称" },
+                { "key": "unit", "label": "计费单位" },
+                { "key": "discountType", "label": "折扣方式" },
+                { "key": "discountValue", "label": "折扣值" },
+                { "key": "remark", "label": "备注" }
+              ],
+              "rows": []
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "其他费用配置",
+      "icon": "fa-coins",
+      "table": {
+        "columns": [
+          { "key": "feeRuleName", "label": "费用名称" },
+          { "key": "unit", "label": "计费单位" },
+          { "key": "discountType", "label": "折扣方式" },
+          { "key": "discountValue", "label": "折扣值" },
+          { "key": "remark", "label": "备注" }
+        ],
+        "rows": [
+          { "feeRuleName": "拍照服务", "unit": "每次", "discountType": "未配置", "discountValue": "-", "remark": "" }
+        ]
+      }
+    },
+    {
+      "title": "其他信息",
+      "icon": "fas fa-calendar",
+      "layout": "grid",
+      "items": [
+        { "label": "配置名称", "value": "客户A-规则配置" },
+        { "label": "生效时间", "value": "2026-01-01 00:00:00" },
+        { "label": "失效时间", "value": "2026-12-31 23:59:59" }
+      ]
+    },
+    {
+      "title": "发布状态",
+      "icon": "fas fa-info-circle",
+      "layout": "grid",
+      "items": [
+        {
+          "label": "生效状态",
+          "value": "生效中",
+          "type": "badge",
+          "badgeClass": "bg-green-100 text-green-800"
+        },
+        {
+          "label": "微调状态",
+          "value": "未微调",
+          "type": "badge",
+          "badgeClass": "bg-green-100 text-green-800"
+        },
+        { "label": "规则版本", "value": "v3" },
+        {
+          "label": "快照状态",
+          "value": "已冻结",
+          "type": "badge",
+          "badgeClass": "bg-blue-100 text-blue-800"
+        }
+      ]
+    }
+  ],
+  "detailData": {
+    "rc-001": {
+      "customer": "客户A (CUST-A)",
+      "warehouse": "洛杉矶仓",
+      "warehouseCode": "US-LA",
+      "configSummary": "快递 3 项 · 库内 5 项 · 其他 0 项",
+      "name": "客户A-规则配置",
+      "startTime": "2026-01-01 00:00:00",
+      "endTime": "2026-12-31 23:59:59",
+      "effectiveStatus": "生效中",
+      "tweakStatus": "未微调",
+      "version": "v3",
+      "snapshotStatus": "已冻结",
+      "expressBasic": [
+        { "feeRuleName": "UPS 美西基础价", "unit": "每公斤", "discountType": "折扣率", "discountValue": "100%", "remark": "" }
+      ],
+      "expressSurcharge": [
+        { "feeRuleName": "燃油附加费", "unit": "每单", "discountType": "折扣率", "discountValue": "100%", "remark": "" }
+      ],
+      "expressOther": [],
+      "warehouseUnload": [
+        { "feeRuleName": "整柜入库-卸货费", "unit": "每柜", "discountType": "折扣率", "discountValue": "90%", "remark": "" }
+      ],
+      "warehouseStorage": [
+        { "feeRuleName": "仓储费-月租", "unit": "每平方米/月", "discountType": "折扣率", "discountValue": "100%", "remark": "" }
+      ],
+      "warehousePickup": [
+        { "feeRuleName": "出库费（一件代发）-拣货费", "unit": "每件", "discountType": "折扣率", "discountValue": "95%", "remark": "" }
+      ],
+      "warehouseTransfer": [
+        { "feeRuleName": "出库费（中转）-处理费", "unit": "每托", "discountType": "折扣率", "discountValue": "100%", "remark": "" }
+      ],
+      "warehouseVa": [],
+      "otherFees": [
+        { "feeRuleName": "拍照服务", "unit": "每次", "discountType": "未配置", "discountValue": "-", "remark": "" }
+      ]
+    }
+  },
+  "pageActions": [
+    { "label": "返回", "variant": "secondary", "icon": "fas fa-arrow-left", "action": "navigate('list')" }
+  ]
+}

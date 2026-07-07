@@ -1,0 +1,15 @@
+{
+  "type": "flow",
+  "title": "SKU 信息填充",
+  "entry": "list",
+  "header": {
+    "brand": "ELSA"
+  },
+  "pages": [
+    "list",
+    "detail",
+    "audit",
+    "pda-list",
+    "pda"
+  ]
+}

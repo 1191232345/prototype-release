@@ -1,0 +1,12 @@
+{
+  "type": "flow",
+  "title": "快递费管理",
+  "entry": "list",
+  "header": {
+    "brand": "ELSA"
+  },
+  "pages": [
+    "list",
+    "form"
+  ]
+}

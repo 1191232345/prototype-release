@@ -1,0 +1,12 @@
+{
+  "type": "flow",
+  "title": "价卡管理",
+  "entry": "list",
+  "header": {
+    "brand": "ELSA"
+  },
+  "pages": [
+    "list",
+    "form"
+  ]
+}

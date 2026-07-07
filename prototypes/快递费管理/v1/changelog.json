@@ -1,0 +1,44 @@
+[
+  {
+    "version": "v1.0.0",
+    "date": "2026-07-04",
+    "title": "初始化基础价管理原型",
+    "changes": [
+      {
+        "item": "列表页",
+        "desc": "支持按渠道、承运商、仓库、费用类型、创建人筛选"
+      },
+      {
+        "item": "列表页",
+        "desc": "支持查看、编辑、复制、删除行操作"
+      },
+      {
+        "item": "表单页",
+        "desc": "新增/编辑基础信息（渠道、承运商、仓库、费用类型）"
+      },
+      {
+        "item": "详情弹窗",
+        "desc": "展示基础信息 + 分区报价配置（2-8区 × 重量段单价）"
+      }
+    ]
+  },
+  {
+    "version": "v1.1.0",
+    "date": "2026-07-04",
+    "title": "分区报价表格编辑支持",
+    "changes": [
+      {
+        "item": "详情弹窗",
+        "desc": "新增 zone-price-table layout，支持表格编辑分区报价"
+      },
+      {
+        "item": "Schema",
+        "desc": "扩展 spec.schema.json 支持 zonePriceTable 定义"
+      },
+      {
+        "item": "组件",
+        "desc": "新增 ZonePriceTableEditor 组件，支持添加重量段、编辑单价、删除行"
+      }
+    ]
+  }
+]

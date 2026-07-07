@@ -1,0 +1,11 @@
+{
+  "type": "flow",
+  "title": "快递补收",
+  "entry": "list",
+  "header": {
+    "brand": "ELSA"
+  },
+  "pages": [
+    "list"
+  ]
+}

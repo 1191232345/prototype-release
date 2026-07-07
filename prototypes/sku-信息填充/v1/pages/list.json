@@ -1,0 +1,336 @@
+{
+  "pattern": "sku-fill-list",
+  "title": "SKU 信息补充工单",
+  "mainButtons": [
+    {
+      "id": "import",
+      "label": "导入",
+      "icon": "fas fa-file-import",
+      "variant": "secondary",
+      "action": "openImportModal"
+    },
+    {
+      "id": "export",
+      "label": "导出",
+      "icon": "fas fa-file-export",
+      "variant": "secondary",
+      "action": "exportList"
+    },
+    {
+      "id": "create",
+      "label": "新建工单",
+      "icon": "fas fa-plus",
+      "variant": "primary",
+      "action": "openModal",
+      "modalId": "formModal"
+    }
+  ],
+  "importModal": {
+    "title": "批量导入工单",
+    "asyncThreshold": 500,
+    "filePresets": [
+      { "fileName": "sku_workorder_import.xlsx", "totalRows": 3 },
+      { "fileName": "sku_workorder_large.xlsx", "totalRows": 800 }
+    ],
+    "workOrderImportPreview": {
+      "fileName": "sku_workorder_import.xlsx",
+      "totalRows": 3,
+      "rows": [
+        {
+          "customerCode": "CUST-A",
+          "warehouseCode": "US-LA",
+          "skuCode": "SKU-10021",
+          "priority": "高",
+          "remark": "批量导入样例 1"
+        },
+        {
+          "customerCode": "CUST-B",
+          "warehouseCode": "US-NY",
+          "skuCode": "SKU-30001",
+          "priority": "中",
+          "remark": "批量导入样例 2"
+        },
+        {
+          "customerCode": "CUST-A",
+          "warehouseCode": "US-CHI",
+          "skuCode": "SKU-20018",
+          "priority": "低",
+          "remark": ""
+        }
+      ]
+    }
+  },
+  "filters": [
+    {
+      "id": "orderNo",
+      "label": "工单号",
+      "type": "text",
+      "placeholder": "输入工单号"
+    },
+    {
+      "id": "customer",
+      "label": "客户代码",
+      "type": "select",
+      "options": [
+        { "value": "all", "label": "全部" },
+        { "value": "c1", "label": "客户A" },
+        { "value": "c2", "label": "客户B" }
+      ]
+    },
+    {
+      "id": "status",
+      "label": "工单状态",
+      "type": "select",
+      "options": [
+        { "value": "all", "label": "全部" },
+        { "value": "pending_warehouse", "label": "待仓库处理" },
+        { "value": "pending_review", "label": "待客服审核" },
+        { "value": "returned", "label": "已退回" },
+        { "value": "completed", "label": "已完结" }
+      ]
+    },
+    {
+      "id": "warehouse",
+      "label": "仓库代码",
+      "type": "select",
+      "options": [
+        { "value": "all", "label": "全部" },
+        { "value": "w1", "label": "洛杉矶仓" },
+        { "value": "w2", "label": "纽约仓" },
+        { "value": "w3", "label": "芝加哥仓" }
+      ]
+    },
+    {
+      "id": "priority",
+      "label": "优先级",
+      "type": "select",
+      "options": [
+        { "value": "all", "label": "全部" },
+        { "value": "high", "label": "高" },
+        { "value": "medium", "label": "中" },
+        { "value": "low", "label": "低" }
+      ]
+    },
+    {
+      "id": "createdBy",
+      "label": "创建人",
+      "type": "text",
+      "placeholder": "输入创建人"
+    },
+    {
+      "id": "createTimeStart",
+      "label": "创建时间（起）",
+      "type": "datetime",
+      "placeholder": "开始时间"
+    },
+    {
+      "id": "createTimeEnd",
+      "label": "创建时间（止）",
+      "type": "datetime",
+      "placeholder": "结束时间"
+    }
+  ],
+  "table": {
+    "columns": [
+      { "key": "orderNo", "label": "工单号" },
+      { "key": "customer", "label": "客户代码" },
+      { "key": "status", "label": "工单状态" },
+      { "key": "warehouse", "label": "仓库代码" },
+      { "key": "priority", "label": "优先级" },
+      { "key": "skuProgress", "label": "SKU 进度" },
+      { "key": "remark", "label": "备注" },
+      { "key": "createdBy", "label": "创建人" },
+      { "key": "createdAt", "label": "创建时间" },
+      { "key": "updatedAt", "label": "更新时间" },
+      { "key": "actions", "label": "操作" }
+    ],
+    "rows": [
+      {
+        "id": "wo-001",
+        "status": "pending_warehouse",
+        "cells": {
+          "orderNo": { "primary": "WO-20260706-001", "secondary": "ID: wo-001" },
+          "customer": { "primary": "客户A", "secondary": "CUST-A" },
+          "status": "待仓库处理",
+          "warehouse": { "primary": "洛杉矶仓", "secondary": "US-LA" },
+          "priority": "高",
+          "skuProgress": "0/1",
+          "remark": "新品上架，急需补充尺寸图片",
+          "createdBy": { "primary": "张客服" },
+          "createdAt": { "primary": "2026-07-06 09:00:00" },
+          "updatedAt": { "primary": "-" }
+        },
+        "actions": [
+          { "action": "view", "label": "查看" },
+          { "action": "edit", "label": "编辑", "modalId": "formModal" }
+        ]
+      },
+      {
+        "id": "wo-002",
+        "status": "pending_review",
+        "cells": {
+          "orderNo": { "primary": "WO-20260705-012", "secondary": "ID: wo-002" },
+          "customer": { "primary": "客户B", "secondary": "CUST-B" },
+          "status": "待客服审核",
+          "warehouse": { "primary": "纽约仓", "secondary": "US-NY" },
+          "priority": "中",
+          "skuProgress": "1/1",
+          "remark": "仓库已提交 SKU 信息",
+          "createdBy": { "primary": "李客服" },
+          "createdAt": { "primary": "2026-07-05 14:30:00" },
+          "updatedAt": { "primary": "2026-07-06 08:15:00" }
+        },
+        "actions": [
+          { "action": "view", "label": "查看" },
+          { "action": "review", "label": "审核" }
+        ]
+      },
+      {
+        "id": "wo-003",
+        "status": "returned",
+        "cells": {
+          "orderNo": { "primary": "WO-20260704-008", "secondary": "ID: wo-003" },
+          "customer": { "primary": "客户A", "secondary": "CUST-A" },
+          "status": "已退回",
+          "warehouse": { "primary": "芝加哥仓", "secondary": "US-CHI" },
+          "priority": "高",
+          "skuProgress": "1/1",
+          "remark": "尺寸测量有误，需重测",
+          "createdBy": { "primary": "王客服" },
+          "createdAt": { "primary": "2026-07-04 10:00:00" },
+          "updatedAt": { "primary": "2026-07-05 16:20:00" }
+        },
+        "actions": [
+          { "action": "view", "label": "查看" },
+          { "action": "edit", "label": "编辑", "modalId": "formModal" }
+        ]
+      },
+      {
+        "id": "wo-004",
+        "status": "completed",
+        "cells": {
+          "orderNo": { "primary": "WO-20260701-003", "secondary": "ID: wo-004" },
+          "customer": { "primary": "客户A", "secondary": "CUST-A" },
+          "status": "已完结",
+          "warehouse": { "primary": "洛杉矶仓", "secondary": "US-LA" },
+          "priority": "低",
+          "skuProgress": "1/1",
+          "remark": "常规补充",
+          "createdBy": { "primary": "张客服" },
+          "createdAt": { "primary": "2026-07-01 11:00:00" },
+          "updatedAt": { "primary": "2026-07-02 09:30:00" }
+        },
+        "actions": [
+          { "action": "view", "label": "查看" }
+        ]
+      },
+      {
+        "id": "wo-005",
+        "status": "pending_review",
+        "cells": {
+          "orderNo": { "primary": "WO-20260706-005", "secondary": "ID: wo-005" },
+          "customer": { "primary": "客户A", "secondary": "CUST-A" },
+          "status": "待客服审核",
+          "warehouse": { "primary": "洛杉矶仓", "secondary": "US-LA" },
+          "priority": "高",
+          "skuProgress": "1/1",
+          "remark": "紧急补充键盘膜尺寸",
+          "createdBy": { "primary": "赵客服" },
+          "createdAt": { "primary": "2026-07-06 07:30:00" },
+          "updatedAt": { "primary": "2026-07-06 10:00:00" }
+        },
+        "actions": [
+          { "action": "view", "label": "查看" },
+          { "action": "review", "label": "审核" }
+        ]
+      }
+    ]
+  },
+  "modals": [
+    {
+      "id": "formModal",
+      "title": "新建工单",
+      "width": "large",
+      "skuOptions": [
+        { "value": "SKU-10021", "label": "SKU-10021 · 蓝牙耳机 Pro", "currentSize": "待补充", "currentWeight": "待补充" },
+        { "value": "SKU-10035", "label": "SKU-10035 · 手机支架", "currentSize": "待补充", "currentWeight": "待补充" },
+        { "value": "SKU-20011", "label": "SKU-20011 · 运动水杯", "currentSize": "20×7×7 cm", "currentWeight": "0.30 kg" },
+        { "value": "SKU-20018", "label": "SKU-20018 · 收纳盒", "currentSize": "待补充", "currentWeight": "待补充" },
+        { "value": "SKU-30001", "label": "SKU-30001 · 数据线 1m", "currentSize": "待补充", "currentWeight": "待补充" },
+        { "value": "SKU-40001", "label": "SKU-40001 · 键盘膜", "currentSize": "待补充", "currentWeight": "待补充" }
+      ],
+      "sections": [
+        {
+          "title": "工单信息",
+          "icon": "fa-clipboard",
+          "fields": [
+            {
+              "id": "customer",
+              "label": "客户代码",
+              "type": "select",
+              "required": true,
+              "options": [
+                { "value": "c1", "label": "客户A (CUST-A)" },
+                { "value": "c2", "label": "客户B (CUST-B)" }
+              ]
+            },
+            {
+              "id": "priority",
+              "label": "优先级",
+              "type": "select",
+              "required": true,
+              "defaultValue": "medium",
+              "options": [
+                { "value": "high", "label": "高" },
+                { "value": "medium", "label": "中" },
+                { "value": "low", "label": "低" }
+              ]
+            },
+            {
+              "id": "warehouse",
+              "label": "仓库代码",
+              "type": "select",
+              "required": true,
+              "options": [
+                { "value": "w1", "label": "洛杉矶仓 (US-LA)" },
+                { "value": "w2", "label": "纽约仓 (US-NY)" },
+                { "value": "w3", "label": "芝加哥仓 (US-CHI)" }
+              ]
+            },
+            {
+              "id": "remark",
+              "label": "备注",
+              "type": "textarea",
+              "placeholder": "补充说明，最多 500 字"
+            }
+          ]
+        },
+        {
+          "title": "SKU",
+          "icon": "fa-box",
+          "layout": "sku-line-table"
+        }
+      ],
+      "editData": {
+        "wo-001": {
+          "customer": "c1",
+          "priority": "high",
+          "warehouse": "w1",
+          "remark": "新品上架，急需补充尺寸图片",
+          "skuLines": "SKU-10021"
+        },
+        "wo-003": {
+          "customer": "c1",
+          "priority": "high",
+          "warehouse": "w3",
+          "remark": "尺寸测量有误，需重测",
+          "skuLines": "SKU-20011"
+        }
+      },
+      "formActions": [
+        { "label": "取消", "variant": "secondary", "icon": "fas fa-times", "action": "closeModal" },
+        { "label": "提交", "variant": "primary", "icon": "fas fa-paper-plane", "action": "submit" }
+      ]
+    }
+  ]
+}

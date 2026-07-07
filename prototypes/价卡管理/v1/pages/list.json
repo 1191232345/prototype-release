@@ -1,0 +1,398 @@
+{
+  "pattern": "rule-config-list",
+  "title": "价卡列表",
+  "filters": [
+    {
+      "id": "name",
+      "label": "价卡名称",
+      "type": "text",
+      "placeholder": "请输入价卡名称"
+    },
+    {
+      "id": "createdBy",
+      "label": "创建人",
+      "type": "select",
+      "placeholder": "请选择创建人",
+      "options": [
+        {
+          "value": "",
+          "label": "请选择创建人"
+        },
+        {
+          "value": "admin",
+          "label": "管理员"
+        },
+        {
+          "value": "user1",
+          "label": "张三"
+        }
+      ]
+    },
+    {
+      "id": "updatedBy",
+      "label": "更新人",
+      "type": "select",
+      "placeholder": "请选择更新人",
+      "options": [
+        {
+          "value": "",
+          "label": "请选择更新人"
+        },
+        {
+          "value": "admin",
+          "label": "管理员"
+        },
+        {
+          "value": "user1",
+          "label": "张三"
+        }
+      ]
+    },
+    {
+      "id": "createTimeStart",
+      "label": "创建时间(开始)",
+      "type": "datetime",
+      "placeholder": "开始时间"
+    },
+    {
+      "id": "createTimeEnd",
+      "label": "创建时间(结束)",
+      "type": "datetime",
+      "placeholder": "结束时间"
+    },
+    {
+      "id": "updateTimeStart",
+      "label": "更新时间(开始)",
+      "type": "datetime",
+      "placeholder": "开始时间"
+    },
+    {
+      "id": "updateTimeEnd",
+      "label": "更新时间(结束)",
+      "type": "datetime",
+      "placeholder": "结束时间"
+    }
+  ],
+  "mainButtons": [
+    {
+      "id": "create",
+      "label": "新增价卡",
+      "icon": "fa-plus",
+      "variant": "primary",
+      "action": "navigateForm"
+    }
+  ],
+  "table": {
+    "columns": [
+      {
+        "key": "name",
+        "label": "价卡名称"
+      },
+      {
+        "key": "feeGroups",
+        "label": "包含费用组"
+      },
+      {
+        "key": "createdBy",
+        "label": "创建人"
+      },
+      {
+        "key": "createdAt",
+        "label": "创建时间"
+      },
+      {
+        "key": "updatedBy",
+        "label": "更新人"
+      },
+      {
+        "key": "updatedAt",
+        "label": "更新时间"
+      },
+      {
+        "key": "actions",
+        "label": "操作"
+      }
+    ],
+    "rows": [
+      {
+        "id": "pc-001",
+        "cells": {
+          "name": {
+            "primary": "标准价卡",
+            "secondary": "适用于常规客户的标准价卡配置"
+          },
+          "feeGroups": {
+            "primary": "入库(2项)、快递(1项)"
+          },
+          "createdBy": {
+            "primary": "管理员"
+          },
+          "createdAt": {
+            "primary": "2026-06-15 10:30:00"
+          },
+          "updatedBy": {
+            "primary": "张三"
+          },
+          "updatedAt": {
+            "primary": "2026-07-01 14:20:00"
+          }
+        },
+        "actions": ["view", "edit", "delete"]
+      },
+      {
+        "id": "pc-002",
+        "cells": {
+          "name": {
+            "primary": "VIP价卡",
+            "secondary": "适用于VIP客户的优惠价卡配置"
+          },
+          "feeGroups": {
+            "primary": "入库(3项)、仓储(1项)、增值服务(2项)"
+          },
+          "createdBy": {
+            "primary": "张三"
+          },
+          "createdAt": {
+            "primary": "2026-07-01 09:00:00"
+          },
+          "updatedBy": {
+            "primary": "-"
+          },
+          "updatedAt": {
+            "primary": "-"
+          }
+        },
+        "actions": ["view", "edit", "delete"]
+      },
+      {
+        "id": "pc-003",
+        "cells": {
+          "name": {
+            "primary": "促销价卡",
+            "secondary": "临时促销活动专用的价卡配置"
+          },
+          "feeGroups": {
+            "primary": "快递(2项)、其他(1项)"
+          },
+          "createdBy": {
+            "primary": "李四"
+          },
+          "createdAt": {
+            "primary": "2026-07-03 16:45:00"
+          },
+          "updatedBy": {
+            "primary": "管理员"
+          },
+          "updatedAt": {
+            "primary": "2026-07-04 08:30:00"
+          }
+        },
+        "actions": ["view", "edit", "delete"]
+      }
+    ]
+  },
+  "details": {
+    "pc-001": {
+      "title": "价卡详情 - 标准价卡",
+      "sections": [
+        {
+          "title": "基本信息",
+          "icon": "fa-info-circle",
+          "layout": "grid",
+          "items": [
+            {
+              "label": "价卡名称",
+              "value": "标准价卡"
+            },
+            {
+              "label": "价卡描述",
+              "value": "适用于常规客户的标准价卡配置"
+            },
+            {
+              "label": "创建人",
+              "value": "管理员"
+            },
+            {
+              "label": "创建时间",
+              "value": "2026-06-15 10:30:00"
+            },
+            {
+              "label": "更新人",
+              "value": "张三"
+            },
+            {
+              "label": "更新时间",
+              "value": "2026-07-01 14:20:00"
+            }
+          ]
+        },
+        {
+          "title": "费用项明细",
+          "icon": "fa-list-check",
+          "layout": "fee-list",
+          "feeGroups": [
+            {
+              "name": "入库费",
+              "icon": "fa-download",
+              "items": [
+                {
+                  "category": "入库",
+                  "subCategory": "整柜入库",
+                  "name": "卸货费",
+                  "unit": "柜",
+                  "unitPrice": "$300.00",
+                  "discount": "折扣率: 90%",
+                  "expectedAmount": "$270.00",
+                  "remark": "标准折扣"
+                },
+                {
+                  "category": "入库",
+                  "subCategory": "快递散货入库",
+                  "name": "收货费",
+                  "unit": "件",
+                  "unitPrice": "$5.00",
+                  "discount": "一口价: $4.50",
+                  "expectedAmount": "$4.50"
+                }
+              ]
+            },
+            {
+              "name": "快递费",
+              "icon": "fa-truck",
+              "items": [
+                {
+                  "category": "快递",
+                  "subCategory": "国内快递",
+                  "name": "标准快递费",
+                  "unit": "件",
+                  "unitPrice": "$10.00",
+                  "discount": "无折扣",
+                  "expectedAmount": "$10.00"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "pc-002": {
+      "title": "价卡详情 - VIP价卡",
+      "sections": [
+        {
+          "title": "基本信息",
+          "icon": "fa-info-circle",
+          "layout": "grid",
+          "items": [
+            {
+              "label": "价卡名称",
+              "value": "VIP价卡"
+            },
+            {
+              "label": "价卡描述",
+              "value": "适用于VIP客户的优惠价卡配置"
+            },
+            {
+              "label": "创建人",
+              "value": "张三"
+            },
+            {
+              "label": "创建时间",
+              "value": "2026-07-01 09:00:00"
+            },
+            {
+              "label": "更新人",
+              "value": "-"
+            },
+            {
+              "label": "更新时间",
+              "value": "-"
+            }
+          ]
+        },
+        {
+          "title": "费用项明细",
+          "icon": "fa-list-check",
+          "layout": "fee-list",
+          "feeGroups": [
+            {
+              "name": "入库费",
+              "icon": "fa-download",
+              "items": [
+                {
+                  "category": "入库",
+                  "subCategory": "整柜入库",
+                  "name": "卸货费",
+                  "unit": "柜",
+                  "unitPrice": "$300.00",
+                  "discount": "折扣率: 80%",
+                  "expectedAmount": "$240.00",
+                  "remark": "VIP优惠"
+                }
+              ]
+            },
+            {
+              "name": "仓储费",
+              "icon": "fa-warehouse",
+              "items": [
+                {
+                  "category": "仓储",
+                  "subCategory": "标准仓储",
+                  "name": "仓储费",
+                  "unit": "立方米/天",
+                  "unitPrice": "$0.50",
+                  "discount": "折扣率: 85%",
+                  "expectedAmount": "$0.42"
+                }
+              ]
+            },
+            {
+              "name": "出库（一件代发）",
+              "icon": "fa-parachute-box",
+              "items": [
+                {
+                  "category": "出库（一件代发）",
+                  "subCategory": "一件代发出库",
+                  "name": "拣货费",
+                  "unit": "件",
+                  "unitPrice": "$2.00",
+                  "discount": "折扣率: 90%",
+                  "expectedAmount": "$1.80"
+                }
+              ]
+            },
+            {
+              "name": "出库（中转）",
+              "icon": "fa-exchange-alt",
+              "items": [
+                {
+                  "category": "出库（中转）",
+                  "subCategory": "中转出库",
+                  "name": "中转处理费",
+                  "unit": "托",
+                  "unitPrice": "$30.00",
+                  "discount": "折扣率: 100%",
+                  "expectedAmount": "$30.00"
+                }
+              ]
+            },
+            {
+              "name": "增值服务",
+              "icon": "fa-star",
+              "items": [
+                {
+                  "category": "增值服务",
+                  "subCategory": "拍照服务",
+                  "name": "拍照费",
+                  "unit": "张",
+                  "unitPrice": "$5.00",
+                  "discount": "一口价: $3.00",
+                  "expectedAmount": "$3.00"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
