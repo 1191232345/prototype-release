@@ -186,11 +186,5 @@
         "newEndTime": "2026-05-31 23:59:59"
       }
     }
-  },
-  "rowActions": {
-    "view": {
-      "label": "查看",
-      "action": "navigate('detail')"
-    }
   }
 }

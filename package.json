@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "build:publish-viewer": "node scripts/build-publish-viewer.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "release:check": "node obfuscate-tool/check-release-git.mjs"
   },
   "dependencies": {
     "@fontsource/ibm-plex-mono": "^5.2.5",

@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Button, PageShell, PrototypeModal } from '@prototype/ui';
 import { useFlowNav } from '@prototype/renderer/FlowContext';
 import { resolveStatusLabels } from '@prototype/renderer/resolveStatusLabels';
-import { DetailContent } from './DetailContent';
 import { ImportSupplementContent } from './ImportSupplementContent';
 import { ListFilters } from './ListFilters';
 import { ListTable } from './ListTable';
@@ -19,16 +18,18 @@ export function RuleConfigListPattern({ spec }) {
     const [showImportModal, setShowImportModal] = useState(false);
     const [showBatchDeleteConfirm, setShowBatchDeleteConfirm] = useState(false);
     const [showBatchConfirmConfirm, setShowBatchConfirmConfirm] = useState(false);
-    const [viewRowId, setViewRowId] = useState(null);
     const [selectedIds, setSelectedIds] = useState(new Set());
     const [toastMessage, setToastMessage] = useState(null);
     const [publishRowId, setPublishRowId] = useState(null);
-    const activeDetail = viewRowId && spec.details?.[viewRowId];
     const selectable = spec.table?.selectable ?? false;
     const statusLabels = resolveStatusLabels(spec.filters, spec.statusLabels);
     const goForm = (editId) => {
         if (flow)
             flow.navigate('form', editId ? { editId } : undefined);
+    };
+    const goDetail = (rowId) => {
+        if (flow)
+            flow.navigate('detail', { rowId });
     };
     const showToast = (message) => {
         setToastMessage(message);
@@ -111,10 +112,10 @@ export function RuleConfigListPattern({ spec }) {
         return (_jsx("div", { className: "mb-6", children: _jsx(Button, { icon: "fas fa-plus", onClick: () => goForm(), ...reviewTarget('list.btn.add'), children: "\u65B0\u589E" }) }));
     };
     return (_jsxs(PageShell, { brand: spec.header?.brand, children: [spec.filters && _jsx(ListFilters, { filters: spec.filters }), renderToolbar(), spec.table &&
-                (isTree ? (_jsx(TreeListTable, { columns: spec.table.columns, rows: spec.table.rows, defaultExpand: spec.table.defaultExpand, statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => setViewRowId(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid })) : (_jsx(ListTable, { columns: spec.table.columns, rows: spec.table.rows, statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => setViewRowId(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid }))), showImportModal && spec.importModal?.customerPriceCardTable && (_jsx(PrototypeModal, { title: spec.importModal.title, onClose: () => setShowImportModal(false), size: "xl", children: _jsx(ImportSupplementContent, { tableSpec: spec.importModal.customerPriceCardTable, asyncThreshold: spec.importModal.asyncThreshold, filePresets: spec.importModal.filePresets, onCancel: () => setShowImportModal(false), onComplete: (mode) => {
+                (isTree ? (_jsx(TreeListTable, { columns: spec.table.columns, rows: spec.table.rows, defaultExpand: spec.table.defaultExpand, statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => goDetail(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid })) : (_jsx(ListTable, { columns: spec.table.columns, rows: spec.table.rows, statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => goDetail(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid }))), showImportModal && spec.importModal?.customerPriceCardTable && (_jsx(PrototypeModal, { title: spec.importModal.title, onClose: () => setShowImportModal(false), size: "xl", children: _jsx(ImportSupplementContent, { tableSpec: spec.importModal.customerPriceCardTable, asyncThreshold: spec.importModal.asyncThreshold, filePresets: spec.importModal.filePresets, onCancel: () => setShowImportModal(false), onComplete: (mode) => {
                         setShowImportModal(false);
                         showToast(mode === 'async'
                             ? '已添加到异步任务，请稍后在任务中心查看'
                             : '差价计算完成，已生成补收记录');
-                    } }) })), _jsx(RuleConfigListBatchModals, { showBatchConfirm: showBatchConfirmConfirm, showBatchDelete: showBatchDeleteConfirm, batchScope: batchScope, confirmableCount: confirmableInScope.length, onCloseConfirm: () => setShowBatchConfirmConfirm(false), onCloseDelete: () => setShowBatchDeleteConfirm(false), onBatchConfirm: handleBatchConfirm, onBatchDelete: handleBatchDelete }), activeDetail && (_jsx(PrototypeModal, { title: activeDetail.title ?? '规则配置详情', onClose: () => setViewRowId(null), size: "xl", children: _jsx(DetailContent, { detail: activeDetail, statusLabels: statusLabels }) })), toastMessage && _jsx(Toast, { message: toastMessage }), publishRowId && (_jsx(RulePublishPreviewModal, { open: true, context: publishContext, preview: publishPreview, onClose: () => setPublishRowId(null), onConfirm: handlePublishConfirm }))] }));
+                    } }) })), _jsx(RuleConfigListBatchModals, { showBatchConfirm: showBatchConfirmConfirm, showBatchDelete: showBatchDeleteConfirm, batchScope: batchScope, confirmableCount: confirmableInScope.length, onCloseConfirm: () => setShowBatchConfirmConfirm(false), onCloseDelete: () => setShowBatchDeleteConfirm(false), onBatchConfirm: handleBatchConfirm, onBatchDelete: handleBatchDelete }), toastMessage && _jsx(Toast, { message: toastMessage }), publishRowId && (_jsx(RulePublishPreviewModal, { open: true, context: publishContext, preview: publishPreview, onClose: () => setPublishRowId(null), onConfirm: handlePublishConfirm }))] }));
 }
