@@ -3,7 +3,7 @@ node_modules/
 dist/*
 !dist/publish-viewer/
 !dist/publish-viewer/**
-data/
+/data/
 settings.json
 .DS_Store
 .env
