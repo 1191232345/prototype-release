@@ -1,4 +1,4 @@
-import { assemblePageSpec, sharedSectionFragmentKey, pageSectionFragmentKey, } from '../lib/mergePageSections.ts';
+import { assemblePageSpec, sharedSectionFragmentKey, pageSectionFragmentKey, } from '../lib/mergePageSections';
 import { parsePageDetailId, parsePageId, parsePageTimelineId, parseProjectKey, } from '../lib/assembleFlowSpec';
 export const flowModules = import.meta.glob('../../prototypes/**/flow.json', { eager: true });
 export const metaModules = import.meta.glob('../../prototypes/**/meta.json', { eager: true });
