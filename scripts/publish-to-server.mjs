@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { ZipArchive } from 'archiver';
 import { getServerPublishSettings } from './settings-store.mjs';
 import {
   docPreviewUrl,
@@ -24,11 +24,22 @@ const UPLOAD_TIMEOUT_MS = 120_000;
 
 function zipDirectory(sourceDir, zipPath) {
   const absZipPath = path.resolve(zipPath);
+  const absSourceDir = path.resolve(sourceDir);
   fs.mkdirSync(path.dirname(absZipPath), { recursive: true });
   if (fs.existsSync(absZipPath)) fs.rmSync(absZipPath);
-  // Zip staging contents (prototype/, docs/) directly — not the staging folder name.
-  execFileSync('zip', ['-r', '-q', absZipPath, '.'], { cwd: sourceDir, timeout: 60_000 });
-  return absZipPath;
+
+  return new Promise((resolve, reject) => {
+    const output = fs.createWriteStream(absZipPath);
+    const archive = new ZipArchive({ zlib: { level: 6 } });
+
+    output.on('close', () => resolve(absZipPath));
+    output.on('error', reject);
+    archive.on('error', reject);
+    archive.pipe(output);
+    // false = zip root mirrors sourceDir contents (same as `zip -r out.zip .` in sourceDir)
+    archive.directory(absSourceDir, false);
+    archive.finalize();
+  });
 }
 
 function buildUploadUrl(uploadUrl, token) {
@@ -195,7 +206,7 @@ export async function publishProjectToServer(root, projectKey, options = {}) {
 
   // 上传完整 published 目录，避免远程服务器按包覆盖时只剩最后一次发布的项目
   const publishedDir = publishedRoot(root);
-  const zipPath = zipDirectory(
+  const zipPath = await zipDirectory(
     publishedDir,
     path.join(bundle.stagingDir, '..', `${bundle.publishPath.replace(/\//g, '_')}.zip`),
   );
