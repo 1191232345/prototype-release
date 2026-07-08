@@ -10,8 +10,6 @@ export default defineConfig({
             '@prototype/ui': r('./src/packages/ui'),
             '@prototype/patterns': r('./src/packages/patterns'),
             '@prototype/renderer': r('./src/packages/renderer'),
-            '@prototype/tokens': r('./src/packages/tokens'),
-            '@prototype/extensions': r('./src/packages/extensions'),
         },
     },
     build: {

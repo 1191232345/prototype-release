@@ -27,7 +27,3 @@ export function renderSpec(spec) {
     }
     return (_jsx(PatternErrorBoundary, { pattern: spec.pattern, children: _jsx(Suspense, { fallback: _jsx(PatternSkeleton, {}), children: _jsx(Pattern, { spec: spec }) }) }));
 }
-export function getRegisteredPatterns() {
-    return Object.keys(patternLoaders);
-}
-export { patternLoaders as registry };

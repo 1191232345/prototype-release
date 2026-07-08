@@ -37,6 +37,22 @@
     "details": { "type": "object", "additionalProperties": { "$ref": "#/definitions/rowDetail" } },
     "detail": { "$ref": "#/definitions/rowDetail" },
     "sections": { "type": "array", "items": { "$ref": "#/definitions/formSection" } },
+    "includeSections": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "合并 pages/shared.sections.{key}.json 片段"
+    },
+    "feeRowSamples": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "description": "详情页只读：预填费用表格行"
+    },
     "customerPriceCardTable": { "$ref": "#/definitions/customerPriceCardTable" },
     "editData": {
       "type": "object",
@@ -145,7 +161,12 @@
     },
     {
       "if": { "properties": { "pattern": { "const": "rule-config-detail" } } },
-      "then": { "required": ["detail"] }
+      "then": {
+        "anyOf": [
+          { "required": ["detail"] },
+          { "required": ["sections"] }
+        ]
+      }
     },
     {
       "if": { "properties": { "pattern": { "const": "express-supplement-import-form" } } },
@@ -301,6 +322,7 @@
       "additionalProperties": false,
       "properties": {
         "tree": { "type": "boolean" },
+        "masterDetail": { "type": "boolean" },
         "defaultExpand": { "type": "boolean" },
         "selectable": { "type": "boolean" },
         "columns": {
@@ -476,7 +498,6 @@
         "title": { "type": "string" },
         "sections": {
           "type": "array",
-          "minItems": 1,
           "items": { "$ref": "#/definitions/detailSection" }
         },
         "timeline": {

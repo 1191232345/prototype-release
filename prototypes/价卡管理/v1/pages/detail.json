@@ -1,0 +1,46 @@
+{
+  "pattern": "rule-config-detail",
+  "title": "价卡详情",
+  "includeSections": [
+    "01-express-fee",
+    "02-warehouse-fee-a",
+    "02-warehouse-fee-b",
+    "03-other-fee"
+  ],
+  "sections": [
+    {
+      "title": "基本信息",
+      "icon": "fa-info-circle",
+      "fields": [
+        {
+          "id": "name",
+          "label": "价卡名称",
+          "type": "text",
+          "required": true,
+          "placeholder": "请输入价卡名称"
+        },
+        {
+          "id": "description",
+          "label": "价卡描述",
+          "type": "text",
+          "required": false,
+          "placeholder": "请输入价卡描述"
+        }
+      ]
+    }
+  ],
+  "editData": {
+    "pc-001": {
+      "name": "标准价卡",
+      "description": "适用于常规客户的标准价卡配置"
+    },
+    "pc-002": {
+      "name": "标准价卡",
+      "description": "适用于常规客户的标准价卡配置"
+    },
+    "pc-003": {
+      "name": "标准价卡",
+      "description": "适用于常规客户的标准价卡配置"
+    }
+  }
+}

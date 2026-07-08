@@ -51,19 +51,34 @@ export function TreeListTable({ columns, rows, defaultExpand = false, selectable
     if (rows.length === 0) {
         return (_jsxs("div", { className: "bg-white rounded-lg shadow-card py-12 text-center", children: [_jsx(FaIcon, { className: "fas fa-cogs text-4xl text-text-muted mb-4" }), _jsx("p", { className: "text-text-secondary", children: "\u6682\u65E0\u89C4\u5219\u914D\u7F6E" })] }));
     }
-    const renderDataCells = (row, depth, group) => columns.map((col) => {
-        if (col.key === 'effectiveStatus') {
-            return (_jsx("td", { className: "px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap", children: group ? (_jsx("span", { className: "text-text-muted", children: "\u2014" })) : (_jsx(EffectiveStatusBadge, { label: cellText(row.cells[col.key]) || '未发布' })) }, col.key));
+    const renderDataCells = (row, depth, group) => {
+        const dataColumns = columns.filter((c) => c.key !== 'actions');
+        const actionColumn = columns.find((c) => c.key === 'actions');
+        if (group) {
+            const nameCol = dataColumns.find((c) => c.key === 'name');
+            const cells = [];
+            if (nameCol) {
+                cells.push(_jsx("td", { colSpan: dataColumns.length, className: "px-3 sm:px-6 py-3 sm:py-4", ...reviewTarget(`list.col.${nameCol.key}`, nameCol.label), children: _jsxs("button", { type: "button", className: "inline-flex items-start gap-2 text-left hover:text-accent transition-colors w-full", onClick: () => toggleExpand(row.id), "aria-expanded": expandedIds.has(row.id), children: [_jsx("i", { className: `fas fa-chevron-${expandedIds.has(row.id) ? 'down' : 'right'} text-text-muted mt-1 text-xs w-3 shrink-0` }), _jsx("span", { className: "font-semibold text-primary", children: renderCell(row.cells[nameCol.key]) })] }) }, nameCol.key));
+            }
+            if (actionColumn) {
+                cells.push(_jsx("td", { className: "px-3 sm:px-6 py-3 sm:py-4" }, "actions"));
+            }
+            return cells;
         }
-        if (col.key === 'actions') {
-            return (_jsx("td", { className: "px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right", children: !group && (_jsx(ListTableActions, { actions: row.actions, rowId: row.id, onView: onView, onEdit: onEdit, onDelete: onDelete, onCopy: onCopy, onPublish: onPublish, onVoid: onVoid })) }, col.key));
-        }
-        const pad = depth > 0 ? { paddingLeft: `${depth * 1.25 + 0.75}rem` } : undefined;
-        const isNameCol = col.key === 'name';
-        return (_jsx("td", { className: "px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap", style: isNameCol ? pad : undefined, ...(col.key !== 'actions' && col.key !== 'effectiveStatus'
-                ? reviewTarget(`list.col.${col.key}`, col.label)
-                : {}), children: isNameCol && group ? (_jsxs("button", { type: "button", className: "inline-flex items-start gap-2 text-left hover:text-accent transition-colors", onClick: () => toggleExpand(row.id), "aria-expanded": expandedIds.has(row.id), children: [_jsx("i", { className: `fas fa-chevron-${expandedIds.has(row.id) ? 'down' : 'right'} text-text-muted mt-1 text-xs w-3` }), _jsx("span", { children: renderCell(row.cells[col.key]) })] })) : (renderCell(group && col.key !== 'name' ? undefined : row.cells[col.key])) }, col.key));
-    });
+        return columns.map((col) => {
+            if (col.key === 'effectiveStatus') {
+                return (_jsx("td", { className: "px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap", children: group ? (_jsx("span", { className: "text-text-muted", children: "\u2014" })) : (_jsx(EffectiveStatusBadge, { label: cellText(row.cells[col.key]) || '未发布' })) }, col.key));
+            }
+            if (col.key === 'actions') {
+                return (_jsx("td", { className: "px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right", children: !group && (_jsx(ListTableActions, { actions: row.actions, rowId: row.id, onView: onView, onEdit: onEdit, onDelete: onDelete, onCopy: onCopy, onPublish: onPublish, onVoid: onVoid })) }, col.key));
+            }
+            const pad = depth > 0 ? { paddingLeft: `${depth * 1.25 + 0.75}rem` } : undefined;
+            const isNameCol = col.key === 'name';
+            return (_jsx("td", { className: "px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap", style: isNameCol ? pad : undefined, ...(col.key !== 'actions' && col.key !== 'effectiveStatus'
+                    ? reviewTarget(`list.col.${col.key}`, col.label)
+                    : {}), children: isNameCol && group ? (_jsxs("button", { type: "button", className: "inline-flex items-start gap-2 text-left hover:text-accent transition-colors", onClick: () => toggleExpand(row.id), "aria-expanded": expandedIds.has(row.id), children: [_jsx("i", { className: `fas fa-chevron-${expandedIds.has(row.id) ? 'down' : 'right'} text-text-muted mt-1 text-xs w-3` }), _jsx("span", { children: renderCell(row.cells[col.key]) })] })) : (renderCell(group && col.key !== 'name' ? undefined : row.cells[col.key])) }, col.key));
+        });
+    };
     const renderRow = (row, depth = 0) => {
         const group = isGroupRow(row);
         const tr = (_jsxs("tr", { className: `hover:bg-hover transition-colors ${group ? 'bg-light-bg/40 font-medium' : ''}`, children: [selectable && !group && (_jsx("td", { className: "px-3 sm:px-4 py-3 sm:py-4", children: _jsx("input", { type: "checkbox", checked: selectedIds.has(row.id), onChange: () => toggleRow(row.id), onClick: (e) => e.stopPropagation(), "aria-label": `选择 ${row.id}`, className: "rounded border-border text-accent focus:ring-accent cursor-pointer" }) })), selectable && group && _jsx("td", { className: "px-3 sm:px-4 py-3 sm:py-4" }), renderDataCells(row, depth, group)] }, row.id));

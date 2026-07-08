@@ -17,9 +17,3 @@ export function Badge({ status = 'default', label, accent }) {
     const cfg = MAP[status] ?? MAP.default;
     return (_jsxs("span", { className: `badge ${cfg.cls}`, children: [_jsx(FaIcon, { className: `${cfg.icon} mr-1` }), label ?? cfg.label] }));
 }
-export function DiscountBadge({ text, configured }) {
-    if (!configured) {
-        return (_jsxs("span", { className: "badge bg-orange-100 text-orange-800", children: [_jsx(FaIcon, { className: "fas fa-exclamation-triangle mr-1" }), "\u672A\u914D\u7F6E"] }));
-    }
-    return (_jsxs("span", { className: "badge badge-accent", children: [_jsx(FaIcon, { className: "fas fa-layer-group mr-1" }), text] }));
-}

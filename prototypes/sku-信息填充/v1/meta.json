@@ -8,6 +8,6 @@
   "designSystem": "elsa-enterprise",
   "author": "产品团队",
   "createdAt": "2026-07-06",
-  "changeSummary": "列表新增导入导出；单工单仅绑定 1 个 SKU；删除订单号关联",
+  "changeSummary": "列表筛选项新增 SKU 搜索条件（文本输入，模糊匹配 SKU 编码）",
   "status": "draft"
 }

@@ -50,15 +50,3 @@ export function validateMetaInfo(meta) {
     const ok = validateMetaFn(meta);
     return ok ? [] : toIssues(validateMetaFn.errors);
 }
-export function validatePrototypePair(spec, meta) {
-    const isFlow = spec && typeof spec === 'object' && spec.type === 'flow';
-    const specErrors = isFlow ? validateFlowSpec(spec) : validatePageSpec(spec);
-    const metaErrors = validateMetaInfo(meta);
-    if (!specErrors.length && !metaErrors.length && spec && meta) {
-        const m = meta;
-        if (isFlow && m.type !== 'flow') {
-            specErrors.push({ path: '/type', message: 'spec 为 flow 但 meta.type 不是 flow' });
-        }
-    }
-    return { specErrors, metaErrors, valid: specErrors.length === 0 && metaErrors.length === 0 };
-}

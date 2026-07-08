@@ -278,23 +278,6 @@ body {
   border-radius: 4px;
 }
 
-.review-prototype-locate-target {
-  @apply outline outline-2 outline-accent/70 outline-offset-2 bg-accent/10;
-  border-radius: 4px;
-  animation: prototype-locate-pulse 1.2s ease-out 2;
-}
-
-@keyframes prototype-locate-pulse {
-  0% {
-    outline-color: rgb(45 147 108 / 0.9);
-    background-color: rgb(45 147 108 / 0.15);
-  }
-  100% {
-    outline-color: rgb(45 147 108 / 0.5);
-    background-color: rgb(45 147 108 / 0.08);
-  }
-}
-
 .prd-interactive-table tbody tr[role='button']:focus-visible {
   @apply outline outline-2 outline-primary/40 outline-offset-[-2px];
 }

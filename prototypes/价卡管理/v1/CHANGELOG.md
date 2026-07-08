@@ -1,5 +1,13 @@
 # 变更记录 - 价卡管理 v1
 
+## 2026-07-07
+- **详情页改为独立只读页，布局与编辑页一致**
+  - 新增 `detail` 页面，查看跳转详情页（非弹窗），仅「返回列表」按钮
+  - 详情页复用表单费用大类导航 + surchargeTable 只读展示，pc-001 样例统一演示
+  - `form.json` / `detail.json` 费用配置拆分为 `shared.sections.*.json` 片段（单文件 ≤300 行）
+  - 移除 `list.json` 中 `details` 弹窗数据
+  - PRD 同步：`{#list.row-buttons}`、`{#detail.*}` 章节；删除 `{#list.detail-modal}` 弹窗说明
+
 ## 2026-07-06
 - **费用项配置 UX 与规则配置对齐**
   - 新建/编辑页：三张纵向 CardWithTabs 合并为「费用大类分段 + 子项 Tab」

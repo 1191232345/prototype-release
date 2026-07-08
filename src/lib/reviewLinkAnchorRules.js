@@ -1,5 +1,12 @@
 const EXACT_RULES = [
     { id: 'list.table', anchorId: 'list.columns', keywords: ['列字段取值', '列表属性'] },
+    { id: 'list.master-detail', anchorId: 'list.init', keywords: ['初始化', '分栏'] },
+    { id: 'list.customer.sidebar', anchorId: 'list.init', keywords: ['客户列表'] },
+    { id: 'list.customer.search', anchorId: 'list.init', keywords: ['搜索客户'] },
+    { id: 'list.rules.panel', anchorId: 'list.columns', keywords: ['规则列表'] },
+    { id: 'list.rules.filters', anchorId: 'list.filters', keywords: ['检索条件'] },
+    { id: 'list.rules.toolbar', anchorId: 'list.main-buttons', keywords: ['主要按钮'] },
+    { id: 'list.rules.header', anchorId: 'list.init', keywords: ['规则列表标题'] },
     { id: 'list.selectable', anchorId: 'list.init', keywords: ['初始化', '数据展示'] },
     { id: 'form.sku.line.table', anchorId: 'form.sku-line-table', keywords: ['SKU 列表'] },
     { id: 'detail.timeline', anchorId: 'detail.timeline', keywords: ['操作时间轴'] },
@@ -19,6 +26,9 @@ const EXACT_RULES = [
 ];
 const PREFIX_RULES = [
     { prefix: 'list.filter.', anchorId: 'list.filters', keywords: ['检索条件'] },
+    { prefix: 'list.customer.item.', anchorId: 'list.init', keywords: ['客户项'] },
+    { prefix: 'list.customer.', anchorId: 'list.init', keywords: ['客户列表'] },
+    { prefix: 'list.rules.', anchorId: 'list.columns', keywords: ['规则列表'] },
     { prefix: 'list.col.', anchorId: 'list.columns', keywords: ['列字段取值', '列表属性'] },
     { prefix: 'list.action.', anchorId: 'list.row-buttons', keywords: ['列表按钮'] },
     { prefix: 'list.btn.', anchorId: 'list.main-buttons', keywords: ['主要按钮'] },

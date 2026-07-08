@@ -5,7 +5,6 @@ import { SplitReviewPanel } from '../app/SplitReviewPanel';
 import { loadPublishedProject } from './loadPublishedProject';
 import '../vendor/localAssets';
 import '../index.css';
-import '@prototype/extensions/registry';
 import { FaIcon } from '@prototype/ui/Icon';
 function PublishPreviewApp() {
     const [project, setProject] = useState(null);

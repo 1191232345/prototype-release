@@ -68,6 +68,12 @@
       "placeholder": "输入工单号"
     },
     {
+      "id": "sku",
+      "label": "SKU",
+      "type": "text",
+      "placeholder": "输入 SKU 编码"
+    },
+    {
       "id": "customer",
       "label": "客户代码",
       "type": "select",

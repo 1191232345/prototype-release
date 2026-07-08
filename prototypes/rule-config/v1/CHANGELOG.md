@@ -1,5 +1,35 @@
 # 变更记录 - 规则配置 v1
 
+## 2026-07-07（6）
+- **规则列表工具栏与列字段调整**
+  - 「新增」按钮移至右侧规则列表：检索条件下、表格上方
+  - 「配置名称」改为「规则名称」
+  - 创建/更新拆为独立四列：创建人、创建时间、更新人、更新时间
+  - PRD 同步 `{#list.columns}` `{#list.column-styles}` `{#list.main-buttons}`
+
+## 2026-07-07（5）
+- **规则列表检索区内嵌 + 列调整**
+  - 检索条件从页面顶部移至右侧规则列表区（标题下方）
+  - 删除「价卡来源」列；新增「创建信息」「更新信息」列
+  - PRD 同步 `{#list.filters}` `{#list.columns}` `{#list.column-styles}`
+
+## 2026-07-07（4）
+- **列表左右分栏（客户 + 规则）**
+  - 主表改为 Master-Detail：左侧客户列表（搜索、数量、当前生效价卡摘要），右侧选中客户的规则列表
+  - 右侧列：生效周期、价卡来源、配置名称、生效状态、操作
+  - 价卡来源展示创建时引用模板名（发布后追溯快照来源，非实时绑定）
+  - 顶部「客户」筛选项移至左侧列表点选
+  - Spec：`table.masterDetail: true`；mock 增加 `priceCardSource`、`activeSummary`
+  - Pattern：新增 `CustomerRuleMasterDetail`；PRD 同步 `{#list.init}` `{#list.filters}` `{#list.columns}` `{#list.column-styles}`
+
+## 2026-07-07（3）
+- **列表主表 UX 优化 + 详情页与表单对齐**
+  - 列表：移除「客户」列；「创建人/时间」「更新人/时间」合并为「创建信息」「更新信息」两列；默认展开树形子行
+  - 父行合并数据列展示客户分组，消除满屏「—」占位
+  - 详情：`sections` 镜像表单结构，只读渲染 sidebar + 费用导航 + surchargeTable；mock 与表单一致
+  - Pattern：`TreeListTable` 父行 colspan；`SurchargeTableEditor`/`FeeCategoryConfig`/`RuleConfigWarehouseSplit` 支持 readOnly；新增 `RuleConfigDetailView`
+  - PRD 同步：`{#list.init}` `{#list.columns}` `{#list.column-styles}` `{#detail.sections}` `{#detail.fee-table}`
+
 ## 2026-07-07（2）
 - **详情弹窗改为独立详情页**
   - 列表「查看」操作改为跳转详情页，替代弹窗展示

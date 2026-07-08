@@ -131,7 +131,7 @@ export function App() {
         if (!selected || selected.status === 'pending')
             return;
         const ok = await copyIteratePrompt(selected);
-        showToast(ok ? '迭代 Prompt 已复制（迭代须同步 PRD）' : '复制失败，请重试', 3500);
+        showToast(ok ? '迭代启动 Prompt 已复制（请先 Read ITERATE.prompt.md）' : '复制失败，请重试', 3500);
     }, [selected, showToast]);
     const recordToResult = useCallback((record) => ({
         previewUrl: record.previewUrl,

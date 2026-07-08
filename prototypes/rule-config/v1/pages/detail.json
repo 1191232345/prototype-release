@@ -1,152 +1,923 @@
 {
   "pattern": "rule-config-detail",
   "title": "规则配置详情",
+  "warehouseOptions": [
+    {
+      "value": "w1",
+      "label": "洛杉矶仓 (US-LA)"
+    },
+    {
+      "value": "w2",
+      "label": "纽约仓 (US-NY)"
+    },
+    {
+      "value": "w3",
+      "label": "芝加哥仓 (US-CHI)"
+    },
+    {
+      "value": "w4",
+      "label": "达拉斯仓 (US-DAL)"
+    },
+    {
+      "value": "w5",
+      "label": "亚特兰大仓 (US-ATL)"
+    },
+    {
+      "value": "w6",
+      "label": "西雅图仓 (US-SEA)"
+    },
+    {
+      "value": "w7",
+      "label": "迈阿密仓 (US-MIA)"
+    },
+    {
+      "value": "w8",
+      "label": "休斯顿仓 (US-HOU)"
+    }
+  ],
+  "customerWarehouses": {
+    "c1": [
+      "w1",
+      "w2",
+      "w3",
+      "w4",
+      "w5"
+    ],
+    "c2": [
+      "w6",
+      "w7",
+      "w8"
+    ]
+  },
+  "sections": [
+    {
+      "title": "基础配置",
+      "icon": "fas fa-link",
+      "fields": [
+        {
+          "id": "customer",
+          "label": "客户代码",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "c1",
+              "label": "客户A (CUST-A)"
+            },
+            {
+              "value": "c2",
+              "label": "客户B (CUST-B)"
+            }
+          ],
+          "defaultValue": "c1"
+        }
+      ]
+    },
+    {
+      "title": "仓库列表",
+      "icon": "fa-warehouse",
+      "layout": "warehouse-list",
+      "warehouseItems": [
+        {
+          "id": "w1",
+          "name": "洛杉矶仓",
+          "code": "US-LA",
+          "configSummary": "快递 1 项 · 库内 1 项 · 其他 0 项",
+          "configured": true
+        },
+        {
+          "id": "w2",
+          "name": "纽约仓",
+          "code": "US-NY",
+          "configSummary": "快递 0 项 · 库内 0 项 · 其他 0 项",
+          "configured": false
+        }
+      ]
+    },
+    {
+      "title": "快递费配置",
+      "icon": "fa-truck",
+      "tabs": [
+        {
+          "label": "基础费",
+          "icon": "fa-money-bill-wave",
+          "content": {
+            "surchargeTable": {
+              "columns": [
+                {
+                  "key": "feeRuleId",
+                  "label": "费用规则",
+                  "type": "select",
+                  "placeholder": "请选择费用规则",
+                  "options": [
+                    {
+                      "value": "sf-001",
+                      "label": "UPS 美西基础价"
+                    },
+                    {
+                      "value": "sf-002",
+                      "label": "FedEx 美东基础价"
+                    }
+                  ]
+                },
+                {
+                  "key": "feeRuleName",
+                  "label": "费用名称",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "unit",
+                  "label": "计费单位",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "discountType",
+                  "label": "折扣方式",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "discountValue",
+                  "label": "折扣值",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "remark",
+                  "label": "备注",
+                  "type": "text",
+                  "placeholder": "请输入备注"
+                },
+                {
+                  "key": "actions",
+                  "label": "操作",
+                  "type": "actions",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "label": "设置",
+                      "icon": "fa-cog",
+                      "variant": "secondary",
+                      "action": "openDiscountModal"
+                    },
+                    {
+                      "type": "button",
+                      "label": "删除",
+                      "icon": "fa-trash",
+                      "variant": "danger",
+                      "action": "deleteRow"
+                    }
+                  ]
+                }
+              ],
+              "rows": [
+                {
+                  "feeRuleId": "sf-001",
+                  "feeRuleName": "UPS 美西基础价",
+                  "unit": "每公斤",
+                  "discountType": "折扣率",
+                  "discountValue": "100%",
+                  "remark": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "label": "附加费",
+          "icon": "fa-plus-circle",
+          "content": {
+            "surchargeTable": {
+              "columns": [
+                {
+                  "key": "feeRuleId",
+                  "label": "费用规则",
+                  "type": "select",
+                  "placeholder": "请选择费用规则",
+                  "options": [
+                    {
+                      "value": "sf-004",
+                      "label": "燃油附加费"
+                    },
+                    {
+                      "value": "sf-005",
+                      "label": "偏远附加费"
+                    }
+                  ]
+                },
+                {
+                  "key": "feeRuleName",
+                  "label": "费用名称",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "unit",
+                  "label": "计费单位",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "discountType",
+                  "label": "折扣方式",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "discountValue",
+                  "label": "折扣值",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "remark",
+                  "label": "备注",
+                  "type": "text",
+                  "placeholder": "请输入备注"
+                },
+                {
+                  "key": "actions",
+                  "label": "操作",
+                  "type": "actions",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "label": "设置",
+                      "icon": "fa-cog",
+                      "variant": "secondary",
+                      "action": "openDiscountModal"
+                    },
+                    {
+                      "type": "button",
+                      "label": "删除",
+                      "icon": "fa-trash",
+                      "variant": "danger",
+                      "action": "deleteRow"
+                    }
+                  ]
+                }
+              ],
+              "rows": [
+                {
+                  "feeRuleId": "sf-004",
+                  "feeRuleName": "燃油附加费",
+                  "unit": "每单",
+                  "discountType": "折扣率",
+                  "discountValue": "100%",
+                  "remark": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "label": "其他费用",
+          "icon": "fa-file-invoice-dollar",
+          "content": {
+            "surchargeTable": {
+              "columns": [
+                {
+                  "key": "feeRuleId",
+                  "label": "费用规则",
+                  "type": "select",
+                  "placeholder": "请选择费用规则",
+                  "options": [
+                    {
+                      "value": "sf-009",
+                      "label": "签名服务"
+                    },
+                    {
+                      "value": "sf-010",
+                      "label": "保险服务"
+                    }
+                  ]
+                },
+                {
+                  "key": "feeRuleName",
+                  "label": "费用名称",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "unit",
+                  "label": "计费单位",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "discountType",
+                  "label": "折扣方式",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "discountValue",
+                  "label": "折扣值",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "remark",
+                  "label": "备注",
+                  "type": "text",
+                  "placeholder": "请输入备注"
+                },
+                {
+                  "key": "actions",
+                  "label": "操作",
+                  "type": "actions",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "label": "设置",
+                      "icon": "fa-cog",
+                      "variant": "secondary",
+                      "action": "openDiscountModal"
+                    },
+                    {
+                      "type": "button",
+                      "label": "删除",
+                      "icon": "fa-trash",
+                      "variant": "danger",
+                      "action": "deleteRow"
+                    }
+                  ]
+                }
+              ],
+              "rows": [
+                {
+                  "feeRuleId": "",
+                  "feeRuleName": "",
+                  "unit": "",
+                  "discountType": "",
+                  "discountValue": "",
+                  "remark": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "库内费用配置",
+      "icon": "fa-warehouse",
+      "tabs": [
+        {
+          "label": "卸货费",
+          "icon": "fa-box-open",
+          "content": {
+            "surchargeTable": {
+              "columns": [
+                {
+                  "key": "feeRuleId",
+                  "label": "费用规则",
+                  "type": "select",
+                  "placeholder": "请选择费用规则",
+                  "options": [
+                    {
+                      "value": "if-001",
+                      "label": "整柜入库-卸货费"
+                    },
+                    {
+                      "value": "if-002",
+                      "label": "快递散货入库-收货费"
+                    }
+                  ]
+                },
+                {
+                  "key": "feeRuleName",
+                  "label": "费用名称",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "unit",
+                  "label": "计费单位",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "discountType",
+                  "label": "折扣方式",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "discountValue",
+                  "label": "折扣值",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "remark",
+                  "label": "备注",
+                  "type": "text",
+                  "placeholder": "请输入备注"
+                },
+                {
+                  "key": "actions",
+                  "label": "操作",
+                  "type": "actions",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "label": "设置",
+                      "icon": "fa-cog",
+                      "variant": "secondary",
+                      "action": "openDiscountModal"
+                    },
+                    {
+                      "type": "button",
+                      "label": "删除",
+                      "icon": "fa-trash",
+                      "variant": "danger",
+                      "action": "deleteRow"
+                    }
+                  ]
+                }
+              ],
+              "rows": [
+                {
+                  "feeRuleId": "if-001",
+                  "feeRuleName": "整柜入库-卸货费",
+                  "unit": "每柜",
+                  "discountType": "折扣率",
+                  "discountValue": "90%",
+                  "remark": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "label": "仓储费",
+          "icon": "fa-warehouse-alt",
+          "content": {
+            "surchargeTable": {
+              "columns": [
+                {
+                  "key": "feeRuleId",
+                  "label": "费用规则",
+                  "type": "select",
+                  "placeholder": "请选择费用规则",
+                  "options": [
+                    {
+                      "value": "if-004",
+                      "label": "仓储费-月租"
+                    }
+                  ]
+                },
+                {
+                  "key": "feeRuleName",
+                  "label": "费用名称",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "unit",
+                  "label": "计费单位",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "discountType",
+                  "label": "折扣方式",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "discountValue",
+                  "label": "折扣值",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "remark",
+                  "label": "备注",
+                  "type": "text",
+                  "placeholder": "请输入备注"
+                },
+                {
+                  "key": "actions",
+                  "label": "操作",
+                  "type": "actions",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "label": "设置",
+                      "icon": "fa-cog",
+                      "variant": "secondary",
+                      "action": "openDiscountModal"
+                    },
+                    {
+                      "type": "button",
+                      "label": "删除",
+                      "icon": "fa-trash",
+                      "variant": "danger",
+                      "action": "deleteRow"
+                    }
+                  ]
+                }
+              ],
+              "rows": [
+                {
+                  "feeRuleId": "if-004",
+                  "feeRuleName": "仓储费-月租",
+                  "unit": "每平方米/月",
+                  "discountType": "折扣率",
+                  "discountValue": "100%",
+                  "remark": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "label": "出库（一件代发）",
+          "icon": "fa-parachute-box",
+          "content": {
+            "surchargeTable": {
+              "columns": [
+                {
+                  "key": "feeRuleId",
+                  "label": "费用规则",
+                  "type": "select",
+                  "placeholder": "请选择费用规则",
+                  "options": [
+                    {
+                      "value": "if-008",
+                      "label": "出库费（一件代发）-拣货费"
+                    },
+                    {
+                      "value": "if-008b",
+                      "label": "出库费（一件代发）-打包费"
+                    }
+                  ]
+                },
+                {
+                  "key": "feeRuleName",
+                  "label": "费用名称",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "unit",
+                  "label": "计费单位",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "discountType",
+                  "label": "折扣方式",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "discountValue",
+                  "label": "折扣值",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "remark",
+                  "label": "备注",
+                  "type": "text",
+                  "placeholder": "请输入备注"
+                },
+                {
+                  "key": "actions",
+                  "label": "操作",
+                  "type": "actions",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "label": "设置",
+                      "icon": "fa-cog",
+                      "variant": "secondary",
+                      "action": "openDiscountModal"
+                    },
+                    {
+                      "type": "button",
+                      "label": "删除",
+                      "icon": "fa-trash",
+                      "variant": "danger",
+                      "action": "deleteRow"
+                    }
+                  ]
+                }
+              ],
+              "rows": [
+                {
+                  "feeRuleId": "",
+                  "feeRuleName": "",
+                  "unit": "",
+                  "discountType": "",
+                  "discountValue": "",
+                  "remark": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "label": "出库（中转）",
+          "icon": "fa-exchange-alt",
+          "content": {
+            "surchargeTable": {
+              "columns": [
+                {
+                  "key": "feeRuleId",
+                  "label": "费用规则",
+                  "type": "select",
+                  "placeholder": "请选择费用规则",
+                  "options": [
+                    {
+                      "value": "if-009",
+                      "label": "出库费（中转）-处理费"
+                    },
+                    {
+                      "value": "if-009b",
+                      "label": "出库费（中转）-打托费"
+                    }
+                  ]
+                },
+                {
+                  "key": "feeRuleName",
+                  "label": "费用名称",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "unit",
+                  "label": "计费单位",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "discountType",
+                  "label": "折扣方式",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "discountValue",
+                  "label": "折扣值",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "remark",
+                  "label": "备注",
+                  "type": "text",
+                  "placeholder": "请输入备注"
+                },
+                {
+                  "key": "actions",
+                  "label": "操作",
+                  "type": "actions",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "label": "设置",
+                      "icon": "fa-cog",
+                      "variant": "secondary",
+                      "action": "openDiscountModal"
+                    },
+                    {
+                      "type": "button",
+                      "label": "删除",
+                      "icon": "fa-trash",
+                      "variant": "danger",
+                      "action": "deleteRow"
+                    }
+                  ]
+                }
+              ],
+              "rows": [
+                {
+                  "feeRuleId": "",
+                  "feeRuleName": "",
+                  "unit": "",
+                  "discountType": "",
+                  "discountValue": "",
+                  "remark": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "label": "增值服务",
+          "icon": "fa-concierge-bell",
+          "content": {
+            "surchargeTable": {
+              "columns": [
+                {
+                  "key": "feeRuleId",
+                  "label": "费用规则",
+                  "type": "select",
+                  "placeholder": "请选择费用规则",
+                  "options": [
+                    {
+                      "value": "if-005",
+                      "label": "拣货费"
+                    },
+                    {
+                      "value": "if-006",
+                      "label": "打包费"
+                    }
+                  ]
+                },
+                {
+                  "key": "feeRuleName",
+                  "label": "费用名称",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "unit",
+                  "label": "计费单位",
+                  "type": "text",
+                  "placeholder": "自动带出"
+                },
+                {
+                  "key": "discountType",
+                  "label": "折扣方式",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "discountValue",
+                  "label": "折扣值",
+                  "type": "text",
+                  "placeholder": "点击设置按钮配置"
+                },
+                {
+                  "key": "remark",
+                  "label": "备注",
+                  "type": "text",
+                  "placeholder": "请输入备注"
+                },
+                {
+                  "key": "actions",
+                  "label": "操作",
+                  "type": "actions",
+                  "actions": [
+                    {
+                      "type": "button",
+                      "label": "设置",
+                      "icon": "fa-cog",
+                      "variant": "secondary",
+                      "action": "openDiscountModal"
+                    },
+                    {
+                      "type": "button",
+                      "label": "删除",
+                      "icon": "fa-trash",
+                      "variant": "danger",
+                      "action": "deleteRow"
+                    }
+                  ]
+                }
+              ],
+              "rows": [
+                {
+                  "feeRuleId": "",
+                  "feeRuleName": "",
+                  "unit": "",
+                  "discountType": "",
+                  "discountValue": "",
+                  "remark": ""
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "title": "其他费用配置",
+      "icon": "fa-coins",
+      "surchargeTable": {
+        "columns": [
+          {
+            "key": "feeRuleId",
+            "label": "费用规则",
+            "type": "select",
+            "placeholder": "请选择费用规则",
+            "options": [
+              {
+                "value": "va-001",
+                "label": "拍照服务"
+              },
+              {
+                "value": "va-002",
+                "label": "标签服务"
+              }
+            ]
+          },
+          {
+            "key": "feeRuleName",
+            "label": "费用名称",
+            "type": "text",
+            "placeholder": "自动带出"
+          },
+          {
+            "key": "unit",
+            "label": "计费单位",
+            "type": "text",
+            "placeholder": "自动带出"
+          },
+          {
+            "key": "discountType",
+            "label": "折扣方式",
+            "type": "text",
+            "placeholder": "点击设置按钮配置"
+          },
+          {
+            "key": "discountValue",
+            "label": "折扣值",
+            "type": "text",
+            "placeholder": "点击设置按钮配置"
+          },
+          {
+            "key": "remark",
+            "label": "备注",
+            "type": "text",
+            "placeholder": "请输入备注"
+          },
+          {
+            "key": "actions",
+            "label": "操作",
+            "type": "actions",
+            "actions": [
+              {
+                "type": "button",
+                "label": "设置",
+                "icon": "fa-cog",
+                "variant": "secondary",
+                "action": "openDiscountModal"
+              },
+              {
+                "type": "button",
+                "label": "删除",
+                "icon": "fa-trash",
+                "variant": "danger",
+                "action": "deleteRow"
+              }
+            ]
+          }
+        ],
+        "rows": [
+          {
+            "feeRuleId": "",
+            "feeRuleName": "",
+            "unit": "",
+            "discountType": "",
+            "discountValue": "",
+            "remark": ""
+          }
+        ]
+      }
+    },
+    {
+      "title": "其他信息",
+      "icon": "fas fa-calendar",
+      "fields": [
+        {
+          "id": "name",
+          "label": "名称",
+          "type": "text",
+          "required": true,
+          "placeholder": "客户名-仓库名-规则配置",
+          "span": 2,
+          "defaultValue": "客户A-规则配置"
+        },
+        {
+          "id": "startTime",
+          "label": "生效时间",
+          "type": "datetime",
+          "required": true,
+          "placeholder": "默认 00:00:00；开始日期 ≤ 今天立即生效，> 今天待生效",
+          "defaultValue": "2026-01-01T00:00"
+        },
+        {
+          "id": "endTime",
+          "label": "失效时间",
+          "type": "datetime",
+          "required": false,
+          "placeholder": "默认当日 23:59:59",
+          "defaultValue": "2026-12-31T23:59:59"
+        }
+      ]
+    }
+  ],
   "detail": {
     "title": "规则配置详情",
     "sections": [
-      {
-        "title": "基础配置",
-        "icon": "fa-link",
-        "layout": "grid",
-        "items": [
-          { "label": "客户代码", "value": "客户A (CUST-A)" }
-        ]
-      },
-      {
-        "title": "仓库信息",
-        "icon": "fa-warehouse",
-        "layout": "grid",
-        "items": [
-          { "label": "仓库名称", "value": "洛杉矶仓" },
-          { "label": "仓库代码", "value": "US-LA" },
-          { "label": "配置摘要", "value": "快递 3 项 · 库内 5 项 · 其他 0 项" }
-        ]
-      },
-      {
-        "title": "快递费配置",
-        "icon": "fa-truck",
-        "layout": "fee-list",
-        "feeGroups": [
-          {
-            "name": "快递费 · 基础费",
-            "icon": "fa-money-bill-wave",
-            "items": [
-              {
-                "category": "express",
-                "subCategory": "基础费",
-                "name": "UPS 美西基础价",
-                "discount": "折扣率: 100%"
-              }
-            ]
-          },
-          {
-            "name": "快递费 · 附加费",
-            "icon": "fa-plus-circle",
-            "items": [
-              {
-                "category": "express",
-                "subCategory": "附加费",
-                "name": "燃油附加费",
-                "discount": "折扣率: 100%"
-              }
-            ]
-          },
-          {
-            "name": "快递费 · 其他费用",
-            "icon": "fa-file-invoice-dollar",
-            "items": []
-          }
-        ]
-      },
-      {
-        "title": "库内费用配置",
-        "icon": "fa-warehouse",
-        "layout": "fee-list",
-        "feeGroups": [
-          {
-            "name": "库内费用 · 卸货费",
-            "icon": "fa-box-open",
-            "items": [
-              {
-                "category": "warehouse",
-                "subCategory": "卸货费",
-                "name": "整柜入库-卸货费",
-                "discount": "折扣率: 90%"
-              }
-            ]
-          },
-          {
-            "name": "库内费用 · 仓储费",
-            "icon": "fa-warehouse-alt",
-            "items": [
-              {
-                "category": "warehouse",
-                "subCategory": "仓储费",
-                "name": "仓储费-月租",
-                "discount": "折扣率: 100%"
-              }
-            ]
-          },
-          {
-            "name": "库内费用 · 出库（一件代发）",
-            "icon": "fa-parachute-box",
-            "items": [
-              {
-                "category": "warehouse",
-                "subCategory": "出库（一件代发）",
-                "name": "出库费（一件代发）-拣货费",
-                "discount": "折扣率: 95%"
-              }
-            ]
-          },
-          {
-            "name": "库内费用 · 出库（中转）",
-            "icon": "fa-exchange-alt",
-            "items": [
-              {
-                "category": "warehouse",
-                "subCategory": "出库（中转）",
-                "name": "出库费（中转）-处理费",
-                "discount": "折扣率: 100%"
-              }
-            ]
-          },
-          {
-            "name": "库内费用 · 增值服务",
-            "icon": "fa-concierge-bell",
-            "items": []
-          }
-        ]
-      },
-      {
-        "title": "其他费用配置",
-        "icon": "fa-coins",
-        "layout": "fee-list",
-        "feeGroups": [
-          {
-            "name": "其他费用",
-            "icon": "fa-coins",
-            "items": [
-              {
-                "category": "other",
-                "subCategory": "增值服务",
-                "name": "拍照服务",
-                "discount": "未配置"
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "title": "其他信息",
-        "icon": "fa-calendar",
-        "layout": "grid",
-        "items": [
-          { "label": "配置名称", "value": "客户A-规则配置" },
-          { "label": "生效时间", "value": "2026-01-01 00:00:00" },
-          { "label": "失效时间", "value": "2026-12-31 23:59:59" }
-        ]
-      },
       {
         "title": "发布状态",
         "icon": "fa-info-circle",
@@ -164,7 +935,10 @@
             "type": "badge",
             "badgeClass": "bg-green-100 text-green-800"
           },
-          { "label": "规则版本", "value": "v3" },
+          {
+            "label": "规则版本",
+            "value": "v3"
+          },
           {
             "label": "快照状态",
             "value": "已冻结",

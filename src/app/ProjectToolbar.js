@@ -32,7 +32,7 @@ function ProjectActions({ project, isPending, publishConfigured, publishing, onE
             setCopied(await copyText(project.prompt));
             setTimeout(() => setCopied(false), 2000);
         };
-        return (_jsxs("div", { className: "flex items-center gap-1 shrink-0 self-end sm:self-auto", children: [_jsxs("button", { type: "button", className: "btn btn-primary py-1.5 px-2.5 sm:px-3 text-sm", onClick: handleCopy, children: [_jsx(FaIcon, { className: "fas fa-copy sm:mr-1.5" }), _jsx("span", { className: "hidden sm:inline", children: copied ? '已复制' : '复制 Prompt' })] }), _jsx(MoreMenu, { menuRef: moreRef, open: moreOpen, onToggle: () => setMoreOpen((v) => !v), items: [
+        return (_jsxs("div", { className: "flex items-center gap-1 shrink-0 self-end sm:self-auto", children: [_jsxs("button", { type: "button", className: "btn btn-primary py-1.5 px-2.5 sm:px-3 text-sm", onClick: handleCopy, children: [_jsx(FaIcon, { className: "fas fa-copy sm:mr-1.5" }), _jsx("span", { className: "hidden sm:inline", children: copied ? '已复制' : '复制启动 Prompt' })] }), _jsx(MoreMenu, { menuRef: moreRef, open: moreOpen, onToggle: () => setMoreOpen((v) => !v), items: [
                         { icon: 'fa-edit', label: '编辑信息', onClick: onEdit },
                         { icon: 'fa-trash', label: '删除项目', danger: true, onClick: onDelete },
                     ] })] }));

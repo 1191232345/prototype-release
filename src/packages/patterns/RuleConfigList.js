@@ -7,6 +7,7 @@ import { ImportSupplementContent } from './ImportSupplementContent';
 import { ListFilters } from './ListFilters';
 import { ListTable } from './ListTable';
 import { TreeListTable } from './TreeListTable';
+import { CustomerRuleMasterDetail } from './CustomerRuleMasterDetail';
 import { Toast } from '../../app/Toast';
 import { reviewTarget } from '../../lib/reviewLink';
 import { RulePublishPreviewModal, resolvePublishPreview, } from './RulePublishPreview';
@@ -48,6 +49,7 @@ export function RuleConfigListPattern({ spec }) {
     const rows = spec.table?.rows ?? [];
     const leafRows = flattenTableRows(rows);
     const isTree = spec.table?.tree ?? false;
+    const isMasterDetail = spec.table?.masterDetail ?? false;
     const handlePublishClick = (rowId) => {
         setPublishRowId(rowId);
     };
@@ -111,8 +113,8 @@ export function RuleConfigListPattern({ spec }) {
         }
         return (_jsx("div", { className: "mb-6", children: _jsx(Button, { icon: "fas fa-plus", onClick: () => goForm(), ...reviewTarget('list.btn.add'), children: "\u65B0\u589E" }) }));
     };
-    return (_jsxs(PageShell, { brand: spec.header?.brand, children: [spec.filters && _jsx(ListFilters, { filters: spec.filters }), renderToolbar(), spec.table &&
-                (isTree ? (_jsx(TreeListTable, { columns: spec.table.columns, rows: spec.table.rows, defaultExpand: spec.table.defaultExpand, statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => goDetail(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid })) : (_jsx(ListTable, { columns: spec.table.columns, rows: spec.table.rows, statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => goDetail(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid }))), showImportModal && spec.importModal?.customerPriceCardTable && (_jsx(PrototypeModal, { title: spec.importModal.title, onClose: () => setShowImportModal(false), size: "xl", children: _jsx(ImportSupplementContent, { tableSpec: spec.importModal.customerPriceCardTable, asyncThreshold: spec.importModal.asyncThreshold, filePresets: spec.importModal.filePresets, onCancel: () => setShowImportModal(false), onComplete: (mode) => {
+    return (_jsxs(PageShell, { brand: spec.header?.brand, children: [spec.filters && !isMasterDetail && _jsx(ListFilters, { filters: spec.filters }), !isMasterDetail && renderToolbar(), spec.table &&
+                (isMasterDetail && isTree ? (_jsx(CustomerRuleMasterDetail, { filters: spec.filters, columns: spec.table.columns, rows: spec.table.rows, onAdd: () => goForm(), statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => goDetail(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid })) : isTree ? (_jsx(TreeListTable, { columns: spec.table.columns, rows: spec.table.rows, defaultExpand: spec.table.defaultExpand, statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => goDetail(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid })) : (_jsx(ListTable, { columns: spec.table.columns, rows: spec.table.rows, statusLabels: statusLabels, selectable: selectable, selectedIds: selectedIds, onSelectionChange: (ids) => setSelectedIds(new Set(ids)), onView: (id) => goDetail(id), onEdit: (id) => goForm(id), onDelete: handleDelete, onCopy: handleCopy, onPublish: handlePublishClick, onVoid: handleVoid }))), showImportModal && spec.importModal?.customerPriceCardTable && (_jsx(PrototypeModal, { title: spec.importModal.title, onClose: () => setShowImportModal(false), size: "xl", children: _jsx(ImportSupplementContent, { tableSpec: spec.importModal.customerPriceCardTable, asyncThreshold: spec.importModal.asyncThreshold, filePresets: spec.importModal.filePresets, onCancel: () => setShowImportModal(false), onComplete: (mode) => {
                         setShowImportModal(false);
                         showToast(mode === 'async'
                             ? '已添加到异步任务，请稍后在任务中心查看'

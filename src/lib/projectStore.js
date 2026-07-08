@@ -1,6 +1,6 @@
 import { slugify } from './utils';
 import { generateProjectPrompt } from './generateProjectPrompt';
-import { getFilesystemSlugs } from './knownSlugs';
+import { getFilesystemSlugs } from '../data/prototypes';
 import { designSystemForPlatform } from './projectPlatform';
 const PENDING_KEY = 'prototype-archive-pending';
 const OVERRIDES_KEY = 'prototype-archive-overrides';
@@ -90,13 +90,6 @@ export function updatePendingProject(id, name, description) {
 export function removePendingProject(id) {
     saveDrafts(loadDrafts().filter((d) => d.id !== id));
 }
-export function reconcilePendingArchives(fsKeys) {
-    const { archived, remaining } = reconcileDrafts(loadDrafts(), fsKeys);
-    if (archived.length > 0) {
-        saveDrafts(remaining);
-    }
-    return archived;
-}
 export function saveMetaOverride(key, title, description, status) {
     const map = loadOverrides();
     const prev = map[key];
@@ -114,12 +107,7 @@ export function removeMetaOverride(key) {
     delete map[key];
     saveOverrides(map);
 }
-export function hideProject(key) {
-    const set = loadHidden();
-    set.add(key);
-    saveHidden(set);
-}
-export function unhideProject(key) {
+function unhideProject(key) {
     const set = loadHidden();
     set.delete(key);
     saveHidden(set);
@@ -134,12 +122,6 @@ export function loadProjectStoreSnapshot() {
         overrides: loadOverrides(),
         hidden: loadHidden(),
     };
-}
-export function getHiddenKeys() {
-    return loadHidden();
-}
-export function getMetaOverrides() {
-    return loadOverrides();
 }
 function reconcileDrafts(drafts, fsKeys) {
     const archived = [];
@@ -212,9 +194,6 @@ export function applyProjectOverrides(item, overrides) {
         },
         flow: { ...item.flow, title: ov.title },
     };
-}
-export function filterHiddenProjects(items, hidden) {
-    return items.filter((i) => !hidden.has(i.key));
 }
 export function matchProjectSearch(item, query) {
     const q = query.trim().toLowerCase();

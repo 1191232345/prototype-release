@@ -15,7 +15,7 @@ function renderCell(value) {
         return value;
     return (_jsxs(_Fragment, { children: [_jsx("div", { className: "text-sm text-dark", children: value.primary }), value.secondary && _jsx("div", { className: "text-xs text-text-muted mt-1", children: value.secondary })] }));
 }
-export function ListTable({ columns, rows, selectable, selectedIds = new Set(), onSelectionChange, onView, onEdit, onDelete, onCopy, onPublish, onVoid, }) {
+export function ListTable({ columns, rows, selectable, selectedIds = new Set(), onSelectionChange, emptyMessage = '暂无补收记录', onView, onEdit, onDelete, onCopy, onPublish, onVoid, }) {
     const allSelected = rows.length > 0 && rows.every((r) => selectedIds.has(r.id));
     const someSelected = rows.some((r) => selectedIds.has(r.id));
     const toggleRow = (rowId) => {
@@ -39,7 +39,7 @@ export function ListTable({ columns, rows, selectable, selectedIds = new Set(), 
         }
     };
     if (rows.length === 0) {
-        return (_jsxs("div", { className: "bg-white rounded-lg shadow-card py-12 text-center", children: [_jsx(FaIcon, { className: "fas fa-cogs text-4xl text-text-muted mb-4" }), _jsx("p", { className: "text-text-secondary", children: "\u6682\u65E0\u8865\u6536\u8BB0\u5F55" })] }));
+        return (_jsxs("div", { className: "bg-white rounded-lg shadow-card py-12 text-center", children: [_jsx(FaIcon, { className: "fas fa-cogs text-4xl text-text-muted mb-4" }), _jsx("p", { className: "text-text-secondary", children: emptyMessage })] }));
     }
     return (_jsx("div", { className: "bg-white rounded-lg shadow-card overflow-hidden", children: _jsx("div", { className: "overflow-x-auto", children: _jsxs("table", { className: "w-full min-w-[640px]", ...reviewTarget('list.table'), children: [_jsx("thead", { className: "bg-light-bg", children: _jsxs("tr", { children: [selectable && (_jsx("th", { className: "px-3 sm:px-4 py-2.5 sm:py-3 w-10", ...reviewTarget('list.selectable', '行勾选'), children: _jsx("input", { type: "checkbox", checked: allSelected, ref: (el) => {
                                             if (el)

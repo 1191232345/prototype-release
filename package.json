@@ -8,6 +8,7 @@
     "build": "vite build",
     "build:publish-viewer": "node scripts/build-publish-viewer.mjs",
     "preview": "vite preview",
+    "prompts:gen": "tsx scripts/generate-project-prompts.ts",
     "release:check": "node obfuscate-tool/check-release-git.mjs"
   },
   "dependencies": {

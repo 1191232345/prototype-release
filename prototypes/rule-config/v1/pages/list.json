@@ -3,15 +3,6 @@
   "title": "规则配置列表",
   "filters": [
     {
-      "id": "customer",
-      "label": "客户",
-      "type": "select",
-      "options": [
-        { "value": "c1", "label": "客户A" },
-        { "value": "c2", "label": "客户B" }
-      ]
-    },
-    {
       "id": "effectiveStatus",
       "label": "生效状态",
       "type": "select",
@@ -62,12 +53,11 @@
   ],
   "table": {
     "tree": true,
-    "defaultExpand": false,
+    "masterDetail": true,
     "columns": [
-      { "key": "name", "label": "配置名称" },
-      { "key": "effectiveStatus", "label": "生效状态" },
-      { "key": "customer", "label": "客户" },
       { "key": "period", "label": "生效周期" },
+      { "key": "name", "label": "规则名称" },
+      { "key": "effectiveStatus", "label": "生效状态" },
       { "key": "createdBy", "label": "创建人" },
       { "key": "createdAt", "label": "创建时间" },
       { "key": "updatedBy", "label": "更新人" },
@@ -80,7 +70,8 @@
         "rowType": "group",
         "cells": {
           "name": { "primary": "客户A", "secondary": "共 4 个有效期" },
-          "customer": { "primary": "客户A", "secondary": "CUST-A" }
+          "customer": "客户A",
+          "activeSummary": { "primary": "生效中", "secondary": "2026-01 ~ 2026-12" }
         },
         "children": [
           {
@@ -88,14 +79,14 @@
             "rowType": "leaf",
             "status": "published",
             "cells": {
-              "name": { "primary": "客户A-规则配置", "secondary": "ID: rc-001 · v3" },
+              "name": { "primary": "客户A-规则配置", "secondary": "v3" },
               "effectiveStatus": "生效中",
-              "customer": { "primary": "客户A", "secondary": "CUST-A" },
+              "customer": "客户A",
               "period": { "primary": "2026-01-01 00:00", "secondary": "至 2026-12-31 23:59:59" },
-              "createdBy": { "primary": "张三" },
-              "createdAt": { "primary": "2026-06-15 10:30:00" },
-              "updatedBy": { "primary": "李四" },
-              "updatedAt": { "primary": "2026-07-01 09:15:00" }
+              "createdBy": "张三",
+              "createdAt": "2026-06-15 10:30:00",
+              "updatedBy": "李四",
+              "updatedAt": "2026-07-01 09:15:00"
             },
             "actions": ["view", "void"]
           },
@@ -104,14 +95,14 @@
             "rowType": "leaf",
             "status": "published",
             "cells": {
-              "name": { "primary": "客户A-规则配置（2027）", "secondary": "ID: rc-004 · v4" },
+              "name": { "primary": "客户A-规则配置（2027）", "secondary": "v4" },
               "effectiveStatus": "待生效",
-              "customer": { "primary": "客户A", "secondary": "CUST-A" },
+              "customer": "客户A",
               "period": { "primary": "2027-01-01 00:00", "secondary": "至 2027-12-31 23:59:59" },
-              "createdBy": { "primary": "张三" },
-              "createdAt": { "primary": "2026-06-20 16:00:00" },
-              "updatedBy": { "primary": "张三" },
-              "updatedAt": { "primary": "2026-06-25 11:30:00" }
+              "createdBy": "张三",
+              "createdAt": "2026-06-20 16:00:00",
+              "updatedBy": "张三",
+              "updatedAt": "2026-06-25 11:30:00"
             },
             "actions": ["view", "void"]
           },
@@ -120,14 +111,14 @@
             "rowType": "leaf",
             "status": "voided",
             "cells": {
-              "name": { "primary": "客户A-规则配置（旧）", "secondary": "ID: rc-003" },
+              "name": { "primary": "客户A-规则配置（旧）" },
               "effectiveStatus": "已过期",
-              "customer": { "primary": "客户A", "secondary": "CUST-A" },
+              "customer": "客户A",
               "period": { "primary": "2025-01-01 00:00", "secondary": "至 2025-12-31 23:59:59" },
-              "createdBy": { "primary": "王五" },
-              "createdAt": { "primary": "2025-06-01 09:00:00" },
-              "updatedBy": { "primary": "张三" },
-              "updatedAt": { "primary": "2025-12-20 16:45:00" }
+              "createdBy": "王五",
+              "createdAt": "2025-06-01 09:00:00",
+              "updatedBy": "张三",
+              "updatedAt": "2025-12-20 16:45:00"
             },
             "actions": ["view", "copy"]
           },
@@ -136,14 +127,14 @@
             "rowType": "leaf",
             "status": "draft",
             "cells": {
-              "name": { "primary": "客户A-规则配置（冲突样例）", "secondary": "ID: rc-006" },
+              "name": { "primary": "客户A-规则配置（冲突样例）" },
               "effectiveStatus": "未发布",
-              "customer": { "primary": "客户A", "secondary": "CUST-A" },
-              "period": { "primary": "2026-06-01 00:00", "secondary": "至 2026-12-31 23:59:59 · 发布后截断 rc-001" },
-              "createdBy": { "primary": "李四" },
-              "createdAt": { "primary": "2026-07-05 10:00:00" },
-              "updatedBy": { "primary": "李四" },
-              "updatedAt": { "primary": "2026-07-05 10:00:00" }
+              "customer": "客户A",
+              "period": { "primary": "2026-06-01 00:00", "secondary": "至 2026-12-31 23:59:59" },
+              "createdBy": "李四",
+              "createdAt": "2026-07-05 10:00:00",
+              "updatedBy": "李四",
+              "updatedAt": "2026-07-05 10:00:00"
             },
             "actions": ["view", "edit", "publish", "delete"]
           }
@@ -154,7 +145,8 @@
         "rowType": "group",
         "cells": {
           "name": { "primary": "客户B", "secondary": "共 1 个有效期" },
-          "customer": { "primary": "客户B", "secondary": "CUST-B" }
+          "customer": "客户B",
+          "activeSummary": "暂无生效规则"
         },
         "children": [
           {
@@ -162,14 +154,14 @@
             "rowType": "leaf",
             "status": "draft",
             "cells": {
-              "name": { "primary": "客户B-规则配置", "secondary": "ID: rc-002" },
+              "name": { "primary": "客户B-规则配置" },
               "effectiveStatus": "未发布",
-              "customer": { "primary": "客户B", "secondary": "CUST-B" },
+              "customer": "客户B",
               "period": { "primary": "2026-07-01 00:00", "secondary": "至 2027-06-30 23:59:59" },
-              "createdBy": { "primary": "李四" },
-              "createdAt": { "primary": "2026-07-01 14:20:00" },
-              "updatedBy": { "primary": "-" },
-              "updatedAt": { "primary": "-" }
+              "createdBy": "李四",
+              "createdAt": "2026-07-01 14:20:00",
+              "updatedBy": "-",
+              "updatedAt": "-"
             },
             "actions": ["view", "edit", "publish", "delete"]
           }

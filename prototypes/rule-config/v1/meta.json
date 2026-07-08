@@ -8,6 +8,6 @@
   "designSystem": "elsa-enterprise",
   "author": "产品团队",
   "createdAt": "2026-07-03",
-  "changeSummary": "详情弹窗改为独立详情页，内容结构与表单页对齐，支持 Tab 展示费用配置",
+  "changeSummary": "新增按钮移入规则列表区，列改为规则名称与独立审计字段",
   "status": "approved"
 }

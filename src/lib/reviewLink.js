@@ -80,4 +80,3 @@ export function reviewTarget(id, rowHint) {
         attrs['data-review-row'] = rowHint;
     return attrs;
 }
-export { resolveReviewAnchor, deriveListPageExpectations, labelsMatch, findReviewIdsForPrdPick } from './reviewLinkRules';

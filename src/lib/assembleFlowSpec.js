@@ -5,8 +5,13 @@ export function parseProjectKey(path) {
     return { project: m[1], version: m[2], key: `${m[1]}/${m[2]}` };
 }
 export function parsePageId(path) {
-    if (/\.details(\.|$)/.test(path) || path.endsWith('.timelines.json'))
+    if (/\.details(\.|$)/.test(path) ||
+        /\.sections\./.test(path) ||
+        /\/shared\.sections\./.test(path) ||
+        /\.fee-rows\.json$/.test(path) ||
+        path.endsWith('.timelines.json')) {
         return null;
+    }
     return path.match(/pages\/([^/]+)\.json$/)?.[1] ?? null;
 }
 export function parsePageDetailId(path) {

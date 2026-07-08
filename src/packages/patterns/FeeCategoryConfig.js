@@ -6,7 +6,7 @@ import { SurchargeTableEditor } from './SurchargeTableEditor';
 import { ZonePriceTableEditor } from './ZonePriceTableEditor';
 import { countFeeSectionConfigured, getFeeSections, sectionKey, shortFeeSectionLabel, } from './ruleConfigFormUtils';
 import { FaIcon } from '@prototype/ui/Icon';
-export function FeeCategoryConfig({ spec, title = '费用配置', icon = 'fas fa-coins', description, rows, onRowsChange, className = '', variant = 'card', }) {
+export function FeeCategoryConfig({ spec, title = '费用配置', icon = 'fas fa-coins', description, rows, onRowsChange, className = '', variant = 'card', readOnly = false, }) {
     const feeSections = getFeeSections(spec);
     const [activeFeeCategoryIndex, setActiveFeeCategoryIndex] = useState(0);
     const [subTabBySection, setSubTabBySection] = useState({});
@@ -42,12 +42,12 @@ export function FeeCategoryConfig({ spec, title = '费用配置', icon = 'fas fa
                                     ...prev,
                                     [activeFeeSection.title]: index,
                                 })), children: [tab.icon && _jsx(FaIcon, { className: `${tab.icon} text-xs opacity-60` }), tab.label, hasConfig && (_jsx("span", { className: `w-1.5 h-1.5 rounded-full ${active ? 'bg-success' : 'bg-success/60'}`, "aria-label": "\u5DF2\u914D\u7F6E" }))] }, tab.label));
-                        }) }))] }), _jsx("div", { className: "flex-1 overflow-y-auto p-4 min-h-0", children: activeFeeSection && (_jsx(FeeSectionPanel, { section: activeFeeSection, subTab: subTabs[activeSubTab], rows: rows, onRowsChange: onRowsChange })) })] }));
+                        }) }))] }), _jsx("div", { className: "flex-1 overflow-y-auto p-4 min-h-0", children: activeFeeSection && (_jsx(FeeSectionPanel, { section: activeFeeSection, subTab: subTabs[activeSubTab], rows: rows, onRowsChange: onRowsChange, readOnly: readOnly })) })] }));
     if (variant === 'embedded')
         return body;
     return (_jsxs(Card, { title: title, icon: icon, className: className, children: [description && (_jsx("p", { className: "text-sm text-text-secondary mb-4", children: description })), body] }));
 }
-function FeeSectionPanel({ section, subTab, rows, onRowsChange, }) {
+function FeeSectionPanel({ section, subTab, rows, onRowsChange, readOnly = false, }) {
     const bindRows = (key) => ({
         rows: rows?.[key],
         onRowsChange: onRowsChange
@@ -56,11 +56,11 @@ function FeeSectionPanel({ section, subTab, rows, onRowsChange, }) {
     });
     if (subTab) {
         const key = sectionKey(section.title, subTab.label);
-        return (_jsx(FeeSectionContent, { content: subTab.content, sectionTitle: section.title, ...bindRows(key) }));
+        return (_jsx(FeeSectionContent, { content: subTab.content, sectionTitle: section.title, readOnly: readOnly, ...bindRows(key) }));
     }
     const key = sectionKey(section.title);
-    return (_jsx(FeeSectionContent, { content: { surchargeTable: section.surchargeTable, zonePriceTable: section.zonePriceTable }, sectionTitle: section.title, ...bindRows(key) }));
+    return (_jsx(FeeSectionContent, { content: { surchargeTable: section.surchargeTable, zonePriceTable: section.zonePriceTable }, sectionTitle: section.title, readOnly: readOnly, ...bindRows(key) }));
 }
-function FeeSectionContent({ content, sectionTitle, rows, onRowsChange, }) {
-    return (_jsxs(_Fragment, { children: [content.zonePriceTable && (_jsx("div", { ...reviewTarget('form.zone.table'), children: _jsx(ZonePriceTableEditor, { table: content.zonePriceTable }) })), content.surchargeTable && (_jsx("div", { ...reviewTarget(sectionTitle.includes('其他') ? 'form.other.table' : 'form.surcharge.table'), children: _jsx(SurchargeTableEditor, { table: content.surchargeTable, rows: rows, onRowsChange: onRowsChange }) }))] }));
+function FeeSectionContent({ content, sectionTitle, rows, onRowsChange, readOnly = false, }) {
+    return (_jsxs(_Fragment, { children: [content.zonePriceTable && (_jsx("div", { ...reviewTarget('form.zone.table'), children: _jsx(ZonePriceTableEditor, { table: content.zonePriceTable }) })), content.surchargeTable && (_jsx("div", { ...reviewTarget(sectionTitle.includes('其他') ? 'form.other.table' : 'form.surcharge.table'), children: _jsx(SurchargeTableEditor, { table: content.surchargeTable, rows: rows, onRowsChange: onRowsChange, readOnly: readOnly }) }))] }));
 }
