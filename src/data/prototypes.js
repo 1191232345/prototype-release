@@ -10,7 +10,10 @@ export function invalidateProjectsCache() {
 }
 export function getFilesystemSlugs() {
     const slugs = new Set();
-    Object.keys(flowModules).forEach((path) => {
+    Object.entries(flowModules).forEach(([path, mod]) => {
+        const manifest = mod.default;
+        if (!manifest || manifest.type !== 'flow')
+            return;
         const m = path.match(/prototypes\/([^/]+)\//);
         if (m)
             slugs.add(m[1]);

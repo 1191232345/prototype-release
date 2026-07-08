@@ -2,9 +2,10 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 import { projectApiPlugin } from './vite/projectApiPlugin';
+import { prototypeJsonPlugin } from './vite/prototypeJsonPlugin';
 const r = (p) => fileURLToPath(new URL(p, import.meta.url));
 export default defineConfig({
-    plugins: [react(), projectApiPlugin()],
+    plugins: [prototypeJsonPlugin(), react(), projectApiPlugin()],
     resolve: {
         alias: {
             '@prototype/ui': r('./src/packages/ui'),

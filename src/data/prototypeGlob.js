@@ -1,4 +1,5 @@
-import { assemblePageSpec, sharedSectionFragmentKey, pageSectionFragmentKey, } from '../lib/mergePageSections';
+import { assemblePageFromParts, applyPageTimelines, mergePageDetails, } from '../lib/assemblePageParts';
+import { sharedSectionFragmentKey, pageSectionFragmentKey, } from '../lib/mergePageSections';
 import { parsePageDetailId, parsePageId, parsePageTimelineId, parseProjectKey, } from '../lib/assembleFlowSpec';
 export const flowModules = import.meta.glob('../../prototypes/**/flow.json', { eager: true });
 export const metaModules = import.meta.glob('../../prototypes/**/meta.json', { eager: true });
@@ -39,6 +40,8 @@ export async function loadPagesForProject(projectKey) {
         if (!pageId)
             return;
         const mod = await loader();
+        if (!mod.default)
+            return;
         map[pageId] = mod.default;
     }));
     const sharedFragments = {};
@@ -47,7 +50,7 @@ export async function loadPagesForProject(projectKey) {
             continue;
         const fileName = path.split('/').pop() ?? '';
         const key = sharedSectionFragmentKey(fileName);
-        if (key)
+        if (key && mod.default)
             sharedFragments[key] = mod.default;
     }
     for (const pageId of Object.keys(map)) {
@@ -57,18 +60,19 @@ export async function loadPagesForProject(projectKey) {
                 continue;
             const fileName = path.split('/').pop() ?? '';
             const key = pageSectionFragmentKey(pageId, fileName);
-            if (key)
+            if (key && mod.default)
                 pageFragments[key] = mod.default;
         }
         let feeRowSamples;
         for (const [path, mod] of Object.entries(feeRowsModules)) {
             if (!belongsToProject(path, projectKey))
                 continue;
-            if (path.endsWith(`/pages/${pageId}.fee-rows.json`)) {
+            if (path.endsWith(`/pages/${pageId}.fee-rows.json`) && mod.default) {
                 feeRowSamples = mod.default;
             }
         }
-        map[pageId] = assemblePageSpec(map[pageId], {
+        map[pageId] = assemblePageFromParts({
+            page: map[pageId],
             sharedFragments,
             pageFragments,
             feeRowSamples,
@@ -81,13 +85,9 @@ export async function loadPagesForProject(projectKey) {
         if (!pageId || !map[pageId])
             return;
         const mod = await loader();
-        map[pageId] = {
-            ...map[pageId],
-            details: {
-                ...(map[pageId].details ?? {}),
-                ...(mod.default ?? {}),
-            },
-        };
+        if (!mod.default)
+            return;
+        map[pageId] = mergePageDetails(map[pageId], mod.default);
     }));
     await Promise.all(Object.entries(pageTimelineModules).map(async ([path, loader]) => {
         if (!belongsToProject(path, projectKey))
@@ -96,14 +96,9 @@ export async function loadPagesForProject(projectKey) {
         if (!pageId || !map[pageId]?.details)
             return;
         const mod = await loader();
-        const timelines = mod.default;
-        if (!timelines)
+        if (!mod.default)
             return;
-        for (const [rowId, entries] of Object.entries(timelines)) {
-            if (map[pageId].details[rowId]) {
-                map[pageId].details[rowId].timeline = entries;
-            }
-        }
+        map[pageId] = applyPageTimelines(map[pageId], mod.default);
     }));
     return map;
 }
