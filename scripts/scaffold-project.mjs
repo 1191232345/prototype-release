@@ -1,8 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { resolveProjectDir } from './delete-project-dir.mjs';
+import { listProjectFolders, listProjectMetaIds, resolveProjectDir } from './delete-project-dir.mjs';
+import {
+  generateProjectFolder,
+  generateProjectId,
+  validateProjectName,
+} from './slug-utils.mjs';
 
-const SLUG_RE = /^[a-z0-9-]+$/;
 const VERSION_RE = /^v\d+$/;
 
 const REQUIREMENTS_CONFIRM_PHRASE = '需求理解正确，继续细化';
@@ -84,7 +88,7 @@ function scaffoldPcPages(pagesDir, name) {
 function scaffoldMobilePages(pagesDir, name) {
   writeJson(path.join(pagesDir, 'list.json'), {
     pattern: 'sku-fill-pda-list',
-    title: name,
+    title: projectName,
     pageMode: 'pda',
     mainButtons: [],
     header: { brand: 'ELSA PDA' },
@@ -152,25 +156,27 @@ function scaffoldDocs(projectDir, root, vars, name, platform) {
 }
 
 /**
- * 在 prototypes/{slug}/{version}/ 创建项目骨架
+ * 在 prototypes/{folder}/{version}/ 创建项目骨架
  */
 export function scaffoldProject(root, input) {
-  const name = String(input.name || '').trim();
-  const slug = String(input.slug || '').trim();
   const version = String(input.version || 'v1').trim();
   const platform = input.platform === 'mobile' ? 'mobile' : 'pc';
 
-  if (!name) {
-    return { ok: false, error: '请填写项目名称' };
-  }
-  if (!SLUG_RE.test(slug)) {
-    return { ok: false, error: 'slug 无效，请使用英文小写、数字与连字符' };
+  const check = validateProjectName(input.name);
+  if (!check.ok) {
+    return { ok: false, error: check.error };
   }
   if (!VERSION_RE.test(version)) {
     return { ok: false, error: 'version 无效，应为 v1、v2 等格式' };
   }
 
-  const projectKey = `${slug}/${version}`;
+  const projectName = check.name;
+  const existingFolders = listProjectFolders(root);
+  const existingIds = listProjectMetaIds(root);
+  const projectFolder = generateProjectFolder(projectName, (f) => existingFolders.has(f));
+  const metaId = generateProjectId(projectName, (id) => existingIds.has(id));
+
+  const projectKey = `${projectFolder}/${version}`;
   const projectDir = resolveProjectDir(root, projectKey);
   if (!projectDir) {
     return { ok: false, error: '无效的项目目录' };
@@ -179,24 +185,24 @@ export function scaffoldProject(root, input) {
     return { ok: false, error: `项目目录已存在：prototypes/${projectKey}` };
   }
 
-  const vars = buildTemplateVars({ name, slug, version, platform });
+  const vars = buildTemplateVars({ name: projectName, slug: projectFolder, version, platform });
   const pages = platform === 'mobile' ? ['list', 'task'] : ['list', 'form'];
 
   fs.mkdirSync(path.join(projectDir, 'pages'), { recursive: true });
 
   writeJson(path.join(projectDir, 'flow.json'), {
     type: 'flow',
-    title: name,
+    title: projectName,
     entry: 'list',
     header: { brand: platform === 'mobile' ? 'ELSA PDA' : 'ELSA' },
     pages,
   });
 
   writeJson(path.join(projectDir, 'meta.json'), {
-    id: slug,
+    id: metaId,
     version,
-    title: name,
-    project: slug,
+    title: projectName,
+    project: projectFolder,
     type: 'flow',
     mode: 'spec',
     designSystem: platform === 'mobile' ? 'elsa-pda' : 'elsa-enterprise',
@@ -207,16 +213,18 @@ export function scaffoldProject(root, input) {
   });
 
   if (platform === 'mobile') {
-    scaffoldMobilePages(path.join(projectDir, 'pages'), name);
+    scaffoldMobilePages(path.join(projectDir, 'pages'), projectName);
   } else {
-    scaffoldPcPages(path.join(projectDir, 'pages'), name);
+    scaffoldPcPages(path.join(projectDir, 'pages'), projectName);
   }
 
-  scaffoldDocs(projectDir, root, vars, name, platform);
+  scaffoldDocs(projectDir, root, vars, projectName, platform);
 
   return {
     ok: true,
     projectKey,
+    projectId: metaId,
+    projectFolder,
     projectDir: `prototypes/${projectKey}`,
   };
 }

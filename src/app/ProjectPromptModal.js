@@ -1,22 +1,23 @@
 import { jsx as _jsx } from "react/jsx-runtime";
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Modal } from '@prototype/ui';
 import { PromptFormStep } from './PromptModalSteps';
 import { createProjectOnDisk } from '../lib/createProject';
 import { generateProjectPrompt } from '../lib/generateProjectPrompt';
-import { slugExists } from '../lib/projectStore';
 import { PLATFORM_LABELS } from '../lib/projectPlatform';
-import { copyText, slugify } from '../lib/utils';
+import { copyText, validateProjectName } from '../lib/utils';
 export function ProjectPromptModal({ open, platform, onClose, onDone }) {
     const [name, setName] = useState('');
     const [error, setError] = useState('');
     const [submitting, setSubmitting] = useState(false);
+    const prevOpenRef = useRef(false);
     useEffect(() => {
-        if (!open)
-            return;
-        setName('');
-        setError('');
-        setSubmitting(false);
+        if (open && !prevOpenRef.current) {
+            setName('');
+            setError('');
+            setSubmitting(false);
+        }
+        prevOpenRef.current = open;
     }, [open, platform]);
     const handleClose = () => {
         if (submitting)
@@ -28,32 +29,30 @@ export function ProjectPromptModal({ open, platform, onClose, onDone }) {
     const handleSubmit = async () => {
         if (submitting)
             return;
-        if (!name.trim()) {
-            setError('请填写项目名称');
-            return;
-        }
-        const slug = slugify(name.trim());
-        if (slugExists(slug)) {
-            setError(`目录 slug「${slug}」已被占用，请修改项目名称`);
+        const validated = validateProjectName(name);
+        if (!validated.ok) {
+            setError(validated.error);
             return;
         }
         setSubmitting(true);
         setError('');
         try {
             const created = await createProjectOnDisk({
-                name: name.trim(),
-                slug,
+                name: validated.name,
                 platform,
                 version: 'v1',
             });
-            if (!created.ok) {
+            if (!created.ok || !created.projectKey || !created.projectFolder) {
                 setError(created.error ?? '创建项目目录失败');
                 return;
             }
-            const projectKey = created.projectKey ?? `${slug}/v1`;
-            const prompt = generateProjectPrompt({ name: name.trim(), slug, version: 'v1' }, platform);
+            const prompt = generateProjectPrompt({
+                name: validated.name,
+                slug: created.projectFolder,
+                version: 'v1',
+            }, platform);
             const promptCopied = await copyText(prompt);
-            onDone({ projectKey, promptCopied });
+            onDone({ projectKey: created.projectKey, promptCopied });
             setName('');
             setError('');
             onClose();

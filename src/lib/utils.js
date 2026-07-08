@@ -1,11 +1,23 @@
-export function slugify(name) {
-    return name
+export function sanitizeProjectFolder(name) {
+    return (name
         .trim()
-        .toLowerCase()
-        .replace(/[\s_]+/g, '-')
-        .replace(/[^a-z0-9\u4e00-\u9fa5-]/g, '')
+        .replace(/[/\\:*?"<>|]/g, '')
+        .replace(/\s+/g, '-')
         .replace(/-+/g, '-')
-        .replace(/^-|-$/g, '') || 'new-project';
+        .replace(/^-|-$/g, '') || 'new-project');
+}
+export function slugify(name) {
+    return sanitizeProjectFolder(name);
+}
+export function validateProjectName(name) {
+    const trimmed = name.trim();
+    if (!trimmed) {
+        return { ok: false, error: '请填写项目名称' };
+    }
+    if (/[/\\:*?"<>|]/.test(trimmed)) {
+        return { ok: false, error: '项目名称不能包含 / \\ : * ? " < > | 等字符' };
+    }
+    return { ok: true, name: trimmed };
 }
 export async function copyText(text) {
     try {

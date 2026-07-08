@@ -165,7 +165,6 @@ function attachProjectApi(server) {
                 const body = (await readJsonBody(req));
                 const result = scaffoldProject(server.config.root, {
                     name: typeof body.name === 'string' ? body.name : '',
-                    slug: typeof body.slug === 'string' ? body.slug : '',
                     platform: body.platform === 'mobile' ? 'mobile' : 'pc',
                     version: typeof body.version === 'string' ? body.version : 'v1',
                 });
