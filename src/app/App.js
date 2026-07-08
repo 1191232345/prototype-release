@@ -123,11 +123,14 @@ export function App() {
             document.body.style.overflow = prev;
         };
     }, [sidebarOpen]);
-    const handlePromptDone = useCallback((projectKey) => {
+    const handlePromptDone = useCallback(({ projectKey, promptCopied }) => {
+        setShowCreate(false);
         handleListRefresh();
-        if (projectKey)
-            setSelectedKey(projectKey);
-    }, [handleListRefresh]);
+        setSelectedKey(projectKey);
+        showToast(promptCopied
+            ? '项目已创建，启动 Prompt 已复制，请粘贴到 Cursor 对话'
+            : '项目已创建，自动复制失败，请使用工具栏「复制启动 Prompt」', promptCopied ? 4500 : 5500);
+    }, [handleListRefresh, showToast]);
     const handleIterate = useCallback(async () => {
         if (!selected || selected.status === 'pending')
             return;

@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { deleteProjectDirectory, resolveProjectDir } from '../scripts/delete-project-dir.mjs';
+import { scaffoldProject } from '../scripts/scaffold-project.mjs';
 import { getPublicConfig, updateConfig } from '../scripts/settings-store.mjs';
 import { publishProject } from '../scripts/publish-project.mjs';
 import { publishProjectToServer } from '../scripts/publish-to-server.mjs';
@@ -156,6 +157,25 @@ function attachProjectApi(server) {
             }
             catch (err) {
                 sendJson(res, 400, { ok: false, error: err instanceof Error ? err.message : '发布失败' });
+            }
+            return;
+        }
+        if (url === '/api/projects/create' && req.method === 'POST') {
+            try {
+                const body = (await readJsonBody(req));
+                const result = scaffoldProject(server.config.root, {
+                    name: typeof body.name === 'string' ? body.name : '',
+                    slug: typeof body.slug === 'string' ? body.slug : '',
+                    platform: body.platform === 'mobile' ? 'mobile' : 'pc',
+                    version: typeof body.version === 'string' ? body.version : 'v1',
+                });
+                sendJson(res, result.ok ? 200 : 400, result);
+            }
+            catch (err) {
+                sendJson(res, 500, {
+                    ok: false,
+                    error: err instanceof Error ? err.message : '创建项目失败',
+                });
             }
             return;
         }
