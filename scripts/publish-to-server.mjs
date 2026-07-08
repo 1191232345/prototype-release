@@ -23,9 +23,12 @@ import {
 const UPLOAD_TIMEOUT_MS = 120_000;
 
 function zipDirectory(sourceDir, zipPath) {
-  if (fs.existsSync(zipPath)) fs.rmSync(zipPath);
+  const absZipPath = path.resolve(zipPath);
+  fs.mkdirSync(path.dirname(absZipPath), { recursive: true });
+  if (fs.existsSync(absZipPath)) fs.rmSync(absZipPath);
   // Zip staging contents (prototype/, docs/) directly — not the staging folder name.
-  execFileSync('zip', ['-r', '-q', zipPath, '.'], { cwd: sourceDir, timeout: 60_000 });
+  execFileSync('zip', ['-r', '-q', absZipPath, '.'], { cwd: sourceDir, timeout: 60_000 });
+  return absZipPath;
 }
 
 function buildUploadUrl(uploadUrl, token) {
@@ -192,8 +195,10 @@ export async function publishProjectToServer(root, projectKey, options = {}) {
 
   // 上传完整 published 目录，避免远程服务器按包覆盖时只剩最后一次发布的项目
   const publishedDir = publishedRoot(root);
-  const zipPath = path.join(bundle.stagingDir, '..', `${bundle.publishPath.replace(/\//g, '_')}.zip`);
-  zipDirectory(publishedDir, zipPath);
+  const zipPath = zipDirectory(
+    publishedDir,
+    path.join(bundle.stagingDir, '..', `${bundle.publishPath.replace(/\//g, '_')}.zip`),
+  );
 
   let remote;
   try {

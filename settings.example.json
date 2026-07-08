@@ -1,0 +1,12 @@
+{
+  "githubRepoUrl": "",
+  "githubBranch": "main",
+  "githubRepoPath": "prototypes",
+  "githubPagesBaseUrl": "",
+  "githubAccessToken": "",
+  "serverUploadUrl": "http://your-server:3000/upload",
+  "serverPreviewBaseUrl": "http://your-server:3000/",
+  "serverAccessToken": "",
+  "serverRepoPath": "prototype",
+  "publishTarget": "server"
+}
