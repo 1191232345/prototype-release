@@ -23,13 +23,18 @@ describe('filterDocSections', () => {
     const sections = [
         { title: 'A', icon: 'x', blocks: [], pageScope: 'list' },
         { title: 'B', icon: 'x', blocks: [], pageScope: 'form' },
+        { title: 'D', icon: 'x', blocks: [], pageScope: 'task' },
         { title: 'C', icon: 'x', blocks: [] },
     ];
     it('null pageScope 返回全部', () => {
-        expect(filterDocSections(sections, null)).toHaveLength(3);
+        expect(filterDocSections(sections, null)).toHaveLength(4);
     });
     it('按 pageScope 过滤', () => {
         expect(filterDocSections(sections, 'list')).toHaveLength(1);
+    });
+    it('兼容 task 与 form 页面别名', () => {
+        expect(filterDocSections(sections, 'task').map((s) => s.title)).toEqual(['B', 'D']);
+        expect(filterDocSections(sections, 'form').map((s) => s.title)).toEqual(['B', 'D']);
     });
 });
 describe('parseRequirementsDoc', () => {

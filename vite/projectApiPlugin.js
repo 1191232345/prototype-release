@@ -91,6 +91,12 @@ function sendJson(res, status, body) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.end(JSON.stringify(body));
 }
+function triggerPrototypeReload(server) {
+    if (!('moduleGraph' in server) || !('ws' in server))
+        return;
+    server.moduleGraph.invalidateAll();
+    server.ws.send({ type: 'full-reload' });
+}
 function attachProjectApi(server) {
     server.middlewares.use(servePublishedStatic(server.config.root));
     server.middlewares.use(async (req, res, next) => {
@@ -187,6 +193,9 @@ function attachProjectApi(server) {
                     return;
                 }
                 const result = deleteProjectDirectory(server.config.root, projectKey);
+                if (result.ok) {
+                    triggerPrototypeReload(server);
+                }
                 sendJson(res, result.ok ? 200 : 400, result);
             }
             catch {

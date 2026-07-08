@@ -128,7 +128,12 @@ export function inferPageScope(title, anchorId) {
 export function filterDocSections(sections, pageScope) {
     if (!pageScope)
         return sections;
-    return sections.filter((s) => s.pageScope === pageScope);
+    const aliases = new Set([pageScope]);
+    if (pageScope === 'task')
+        aliases.add('form');
+    if (pageScope === 'form')
+        aliases.add('task');
+    return sections.filter((s) => s.pageScope && aliases.has(s.pageScope));
 }
 export function parseRequirementsDoc(text) {
     const lines = text.replace(/\r\n/g, '\n').split('\n');

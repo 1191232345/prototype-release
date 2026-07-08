@@ -1,4 +1,4 @@
-import { jsxs as _jsxs, jsx as _jsx } from "react/jsx-runtime";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useMemo, useState } from 'react';
 import { MobileDeviceFrame } from '@prototype/ui';
 import { useFlowNav } from '@prototype/renderer/FlowContext';
@@ -7,7 +7,7 @@ import { reviewTarget } from '../../lib/reviewLink';
 import { FaIcon } from '@prototype/ui/Icon';
 export function SkuFillPdaTaskPattern({ spec }) {
     const flow = useFlowNav();
-    const reviewPrefix = flow?.currentPage === 'task' ? 'task' : 'pda';
+    const reviewPrefix = flow?.currentPage === 'task' ? 'form' : 'pda';
     const rowId = flow?.params?.rowId ?? '';
     const detail = (rowId ? spec.details?.[rowId] : undefined) ?? spec.detail;
     const listPageId = flow?.pageLabels?.list !== undefined
@@ -37,7 +37,10 @@ export function SkuFillPdaTaskPattern({ spec }) {
         showToast(label ? `${label}（原型演示）` : '操作成功');
     };
     if (!detail) {
-        return (_jsx(MobileDeviceFrame, { children: _jsxs("div", { className: "flex-1 flex flex-col items-center justify-center p-6 text-center text-text-secondary text-sm gap-3", children: [_jsxs("p", { children: ["\u672A\u627E\u5230\u4EFB\u52A1\u6570\u636E", rowId ? `（${rowId}）` : ''] }), listPageId ? (_jsx("button", { type: "button", className: "text-accent text-sm font-medium", onClick: goBack, children: "\u8FD4\u56DE\u4EFB\u52A1\u5217\u8868" })) : null] }) }));
+        const preview = extractRfidPreview(spec);
+        const pendingRfid = preview.catalog.slice(0, Math.max(preview.catalog.length - 1, 0));
+        const completedRfid = preview.catalog.slice(-1);
+        return (_jsx(MobileDeviceFrame, { children: _jsxs("div", { className: "relative flex flex-col flex-1 min-h-0 bg-surface", children: [_jsxs("header", { className: "shrink-0 bg-primary text-white px-3 py-2.5 border-b-2 border-accent", children: [listPageId ? (_jsxs("button", { type: "button", className: "flex items-center gap-1 text-[11px] text-white/80 mb-1 -ml-0.5", onClick: goBack, children: [_jsx(FaIcon, { className: "fas fa-chevron-left text-[10px]" }), "\u8FD4\u56DE\u5217\u8868"] })) : null, _jsx("h1", { className: "text-[15px] font-semibold leading-tight truncate", children: preview.sku }), _jsx("p", { className: "text-[11px] text-white/75 mt-0.5 truncate", children: preview.meta })] }), _jsxs("div", { className: "flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 space-y-3", children: [_jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "RFID \u64CD\u4F5C\u6A21\u5F0F" }), _jsxs("div", { className: "flex gap-2", children: [_jsx("span", { className: "px-2 py-1 rounded bg-accent/10 text-accent text-xs font-semibold", children: "\u626B\u63CF\u6A21\u5F0F" }), _jsx("span", { className: "px-2 py-1 rounded bg-light-bg text-text-secondary text-xs font-semibold", children: "\u70B9\u9009\u6A21\u5F0F" })] })] }), _jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "\u5F85\u64CD\u4F5C RFID \u5217\u8868" }), _jsx("div", { className: "space-y-1.5", children: pendingRfid.map((rfid) => (_jsxs("div", { className: "flex items-center justify-between rounded border border-border px-2 py-1.5 text-xs", children: [_jsx("span", { className: "font-mono text-text-secondary", children: rfid }), _jsx("span", { className: "text-amber-700 font-medium", children: "\u5F85\u786E\u8BA4" })] }, rfid))) })] }), _jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "\u5DF2\u5B8C\u6210 RFID \u5217\u8868" }), _jsx("div", { className: "space-y-1.5", children: completedRfid.map((rfid) => (_jsxs("div", { className: "flex items-center justify-between rounded border border-green-200 bg-green-50 px-2 py-1.5 text-xs", children: [_jsx("span", { className: "font-mono text-green-900", children: rfid }), _jsx("span", { className: "text-green-700 font-medium", children: "\u5DF2\u786E\u8BA4\u5728\u5E93" })] }, rfid))) })] })] })] }) }));
     }
     const infoSection = detail.sections.find((s) => s.layout === 'grid' && s.items);
     const formSections = detail.sections.filter((s) => s.layout === 'pda-sku-form');
@@ -81,6 +84,21 @@ function extractOrderMeta(items) {
         subtitle: parts.join(' · '),
         priority,
         priorityClass: priorityTone,
+    };
+}
+function extractRfidPreview(spec) {
+    const sections = spec.sections ?? [];
+    const infoFields = sections[0]?.fields ?? [];
+    const allFields = sections.flatMap((section) => section.fields ?? []);
+    const sku = infoFields.find((f) => f.id === 'sku')?.defaultValue || spec.title;
+    const location = infoFields.find((f) => f.id === 'locationCode')?.defaultValue || '-';
+    const pallet = infoFields.find((f) => f.id === 'palletNo')?.defaultValue || '-';
+    const catalogField = allFields.find((f) => f.id === 'rfidCatalog');
+    const catalog = catalogField?.options?.map((o) => o.value || o.label).filter(Boolean);
+    return {
+        sku,
+        meta: `库位 ${location} · 托盘 ${pallet}`,
+        catalog: catalog && catalog.length ? catalog : ['RFID-EPC-DEMO-0001'],
     };
 }
 function PdaSkuSectionBlock({ section, reviewPrefix, directEntry, onShowInstruction, }) {

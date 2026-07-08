@@ -50,7 +50,7 @@ const PREFIX_RULES = [
     { prefix: 'form.fill.', anchorId: 'form.quick-fill', keywords: ['快速填入'] },
     { prefix: 'form.import.', anchorId: 'form.quick-fill', keywords: ['快速填入'] },
     { prefix: 'form.reuse.', anchorId: 'form.quick-fill', keywords: ['快速填入'] },
-    { prefix: 'form.fee.category.', anchorId: 'form.fee-nav', keywords: ['费用大类'] },
+    { prefix: 'form.fee.category.', anchorId: 'form.fee-nav', keywords: ['费用类型'] },
     { prefix: 'form.fee.', anchorId: 'form.fee-nav', keywords: ['费用导航'] },
     { prefix: 'form.publish.', anchorId: 'form.publish-preview', keywords: ['发布前影响预览'] },
     { prefix: 'form.zone.import.', anchorId: 'form.zone-import-modal', keywords: ['导入分区报价弹窗'] },

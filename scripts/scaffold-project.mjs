@@ -88,7 +88,7 @@ function scaffoldPcPages(pagesDir, name) {
 function scaffoldMobilePages(pagesDir, name) {
   writeJson(path.join(pagesDir, 'list.json'), {
     pattern: 'sku-fill-pda-list',
-    title: projectName,
+    title: name,
     pageMode: 'pda',
     mainButtons: [],
     header: { brand: 'ELSA PDA' },

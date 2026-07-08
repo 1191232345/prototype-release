@@ -11,28 +11,26 @@ export function FeeCategoryConfig({ spec, title = '费用配置', icon = 'fas fa
     const [activeFeeCategoryIndex, setActiveFeeCategoryIndex] = useState(0);
     const [subTabBySection, setSubTabBySection] = useState({});
     const activeFeeSection = feeSections[activeFeeCategoryIndex];
-    const activeSubTab = activeFeeSection
+    const subTabs = activeFeeSection?.tabs ?? [];
+    const storedSubTab = activeFeeSection
         ? (subTabBySection[activeFeeSection.title] ?? 0)
         : 0;
-    const subTabs = activeFeeSection?.tabs ?? [];
+    const activeSubTab = subTabs.length > 0 ? Math.min(storedSubTab, subTabs.length - 1) : 0;
     const hasSubNav = subTabs.length > 1;
     const activeRows = rows ?? {};
-    const body = (_jsxs("div", { className: `flex flex-col border border-border rounded-lg bg-white overflow-hidden min-h-[360px] ${variant === 'embedded' ? 'flex-1 min-h-0' : ''}`, ...reviewTarget('form.warehouse.fees', '费用配置'), children: [_jsxs("div", { className: "shrink-0 border-b border-border-light bg-white", ...reviewTarget('form.fee.nav', '费用导航'), children: [_jsx("div", { className: "px-4 py-3", children: _jsx("div", { className: "inline-flex items-center gap-0.5 p-1 bg-surface rounded-lg border border-border-light", role: "tablist", "aria-label": "\u8D39\u7528\u5927\u7C7B", children: feeSections.map((section, index) => {
-                                const configured = countFeeSectionConfigured(activeRows, section);
-                                const active = index === activeFeeCategoryIndex;
-                                const badgeLabel = section.tabs
-                                    ? `${configured}项`
-                                    : configured > 0
-                                        ? '已配'
-                                        : '未配';
-                                return (_jsxs("button", { type: "button", role: "tab", "aria-selected": active, className: `inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all whitespace-nowrap ${active
-                                        ? 'bg-white text-primary shadow-sm'
-                                        : 'text-text-muted hover:text-dark'}`, onClick: () => setActiveFeeCategoryIndex(index), ...reviewTarget(`form.fee.category.${index}`, shortFeeSectionLabel(section.title)), children: [section.icon && _jsx(FaIcon, { className: `${section.icon} text-xs opacity-70` }), shortFeeSectionLabel(section.title), _jsx("span", { className: `text-[10px] px-1 py-0.5 rounded font-semibold leading-none ${configured > 0
-                                                ? active
-                                                    ? 'bg-success/15 text-success'
-                                                    : 'bg-success/10 text-success'
-                                                : 'bg-gray-100 text-text-muted'}`, children: badgeLabel })] }, section.title));
-                            }) }) }), hasSubNav && activeFeeSection && (_jsx("div", { className: "px-4 flex overflow-x-auto border-t border-border-light/70 bg-light-bg/25", role: "tablist", "aria-label": `${shortFeeSectionLabel(activeFeeSection.title)}子项`, ...reviewTarget('form.fee.sub.tabs', '费用子类'), children: subTabs.map((tab, index) => {
+    const activeConfigured = activeFeeSection
+        ? countFeeSectionConfigured(activeRows, activeFeeSection)
+        : 0;
+    const activeBadgeLabel = activeFeeSection?.tabs
+        ? `${activeConfigured}项`
+        : activeConfigured > 0
+            ? '已配'
+            : '未配';
+    const body = (_jsxs("div", { className: `flex flex-col border border-border rounded-lg bg-white overflow-hidden min-h-[360px] ${variant === 'embedded' ? 'flex-1 min-h-0' : ''}`, ...reviewTarget('form.warehouse.fees', '费用配置'), children: [_jsxs("div", { className: "shrink-0 border-b border-border-light bg-white", ...reviewTarget('form.fee.nav', '费用导航'), children: [_jsxs("div", { className: "px-4 py-3 flex flex-wrap items-center gap-2 sm:gap-3", children: [_jsx("label", { htmlFor: "fee-category-select", className: "form-label mb-0 shrink-0", children: "\u8D39\u7528\u7C7B\u578B" }), _jsx("select", { id: "fee-category-select", className: "form-input text-sm min-w-[160px] max-w-[240px]", value: String(activeFeeCategoryIndex), onChange: (e) => setActiveFeeCategoryIndex(Number(e.target.value)), disabled: readOnly, "aria-label": "\u8D39\u7528\u7C7B\u578B", ...reviewTarget(`form.fee.category.${activeFeeCategoryIndex}`, activeFeeSection
+                                    ? shortFeeSectionLabel(activeFeeSection.title)
+                                    : '费用类型'), children: feeSections.map((section, index) => (_jsx("option", { value: String(index), children: shortFeeSectionLabel(section.title) }, section.title))) }), activeFeeSection && (_jsx("span", { className: `text-[10px] px-1.5 py-0.5 rounded font-semibold leading-none ${activeConfigured > 0
+                                    ? 'bg-success/15 text-success'
+                                    : 'bg-gray-100 text-text-muted'}`, children: activeBadgeLabel }))] }), hasSubNav && activeFeeSection && (_jsx("div", { className: "px-4 flex overflow-x-auto border-t border-border-light/70 bg-light-bg/25", role: "tablist", "aria-label": `${shortFeeSectionLabel(activeFeeSection.title)}子项`, ...reviewTarget('form.fee.sub.tabs', '费用子类'), children: subTabs.map((tab, index) => {
                             const tabRows = activeRows[sectionKey(activeFeeSection.title, tab.label)] ?? [];
                             const hasConfig = tabRows.some((r) => Boolean(r.feeRuleId?.trim()));
                             const active = index === activeSubTab;
