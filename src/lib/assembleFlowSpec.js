@@ -21,9 +21,14 @@ export function parsePageDetailId(path) {
 export function parsePageTimelineId(path) {
     return path.match(/pages\/([^.]+)\.timelines\.json$/)?.[1] ?? null;
 }
+function manifestPageIds(manifest) {
+    if (!Array.isArray(manifest.pages))
+        return [];
+    return manifest.pages.filter((id) => typeof id === 'string');
+}
 export function assembleFlowSpec(manifest, pageMap, changelog) {
     const pages = {};
-    for (const pageId of manifest.pages) {
+    for (const pageId of manifestPageIds(manifest)) {
         const page = pageMap[pageId];
         if (page)
             pages[pageId] = page;

@@ -128,3 +128,7 @@ export function findFlowPath(projectKey) {
     }
     return null;
 }
+export function hasPageSpecFile(projectKey, pageId) {
+    const suffix = `/pages/${pageId}.json`;
+    return Object.keys(pageModules).some((path) => belongsToProject(path, projectKey) && path.endsWith(suffix));
+}

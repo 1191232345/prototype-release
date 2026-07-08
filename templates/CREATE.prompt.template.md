@@ -160,8 +160,12 @@
 ## 创建要求
 
 1. flow.json + pages/*.json 严格按阶段二方案编写
-2. meta.json 含 id、version、title、changeSummary、status（默认 draft）
-3. **REQUIREMENTS.md** 写入阶段一确认的需求
+2. **meta.json 必填字段**（与 `meta.schema.json` 一致）：
+   - `id`、`version`、`title`、`project`、`type`（`flow`）、`mode`（`spec`）
+   - `designSystem`（PC：`elsa-enterprise`；移动端/PDA：`elsa-pda`）
+   - `author`、`createdAt`、`changeSummary`、`status`（默认 `draft`）
+3. **flow.json 的 `pages` 必须是字符串数组**（如 `["list","form"]`），页面定义写在 `pages/{id}.json`，禁止把页面 Spec 内联到 flow.json
+4. **REQUIREMENTS.md** 写入阶段一确认的需求
 4. **PRD.md** 按 `templates/PRD.template.md` 编写第 3 章，各节含 `{#锚点}`；PRD 只写中文业务名称
 5. 运行 `npm run validate` 与 `npm run build`（**0 error**）
 6. 运行 `npm run acceptance:gen -- {{SLUG}}/{{VERSION}}`

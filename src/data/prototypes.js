@@ -1,18 +1,24 @@
-import { validateFlowSpec, validateMetaInfo } from '@prototype/renderer/validateSpec';
+import { validateFlowManifest, validateFlowSpec, validateMetaInfo } from '@prototype/renderer/validateSpec';
 import { applyProjectOverrides, loadProjectStoreSnapshot, pendingToProjectItem, reconcileDraftsInStore, } from '../lib/projectStore';
+import { isFilesystemProjectReady, normalizeMetaInfo, } from '../lib/normalizeProjectMeta';
 import { assembleFlowSpec, parseProjectKey } from '../lib/assembleFlowSpec';
-import { findFlowPath, flowModules, loadPagesForProject, loadProjectDocs, metaModules, } from './prototypeGlob';
+import { findFlowPath, flowModules, hasPageSpecFile, loadPagesForProject, loadProjectDocs, metaModules, } from './prototypeGlob';
 let projectsCache = null;
 const detailCache = new Map();
 export function invalidateProjectsCache() {
     projectsCache = null;
     detailCache.clear();
 }
+function flowManifestFromModule(mod) {
+    const manifest = mod.default;
+    if (!manifest || manifest.type !== 'flow')
+        return null;
+    return manifest;
+}
 export function getFilesystemSlugs() {
     const slugs = new Set();
     Object.entries(flowModules).forEach(([path, mod]) => {
-        const manifest = mod.default;
-        if (!manifest || manifest.type !== 'flow')
+        if (!flowManifestFromModule(mod))
             return;
         const m = path.match(/prototypes\/([^/]+)\//);
         if (m)
@@ -20,13 +26,14 @@ export function getFilesystemSlugs() {
     });
     return slugs;
 }
-function buildIndexProject(path, manifest, meta) {
+function buildIndexProject(path, manifest, meta, status = 'active') {
     const parsed = parseProjectKey(path);
+    const manifestErrors = validateFlowManifest(manifest);
     return {
         key: parsed.key,
         project: parsed.project,
         version: parsed.version,
-        status: 'active',
+        status,
         description: meta.changeSummary,
         flow: {
             type: 'flow',
@@ -38,33 +45,41 @@ function buildIndexProject(path, manifest, meta) {
         changelogText: '',
         requirementsText: '',
         prdText: '',
-        specErrors: [],
+        specErrors: manifestErrors,
         metaErrors: validateMetaInfo(meta),
     };
 }
 function loadFilesystemIndex() {
     const items = [];
     Object.entries(flowModules).forEach(([path, mod]) => {
-        const manifest = mod.default;
-        if (!manifest || manifest.type !== 'flow')
+        const manifest = flowManifestFromModule(mod);
+        if (!manifest)
+            return;
+        const parsed = parseProjectKey(path);
+        if (!parsed)
             return;
         const metaPath = path.replace('flow.json', 'meta.json');
-        const meta = metaModules[metaPath]?.default;
-        if (!meta)
+        const rawMeta = metaModules[metaPath]?.default;
+        if (!rawMeta)
             return;
-        items.push(buildIndexProject(path, manifest, meta));
+        const meta = normalizeMetaInfo(parsed, rawMeta);
+        const ready = isFilesystemProjectReady(manifest, meta, hasPageSpecFile(parsed.key, manifest.entry));
+        items.push(buildIndexProject(path, manifest, meta, ready ? 'active' : 'pending'));
     });
     return items;
 }
 function buildProjectsResult() {
     const fsProjects = loadFilesystemIndex();
-    const fsKeys = new Set(fsProjects.map((p) => p.key));
+    const readyKeys = new Set(fsProjects.filter((p) => p.status === 'active').map((p) => p.key));
     const { drafts, overrides, hidden } = loadProjectStoreSnapshot();
-    const { archived: archivedDrafts, remaining: remainingDrafts } = reconcileDraftsInStore(drafts, fsKeys);
-    const pending = remainingDrafts
+    const { archived: archivedDrafts, remaining: remainingDrafts } = reconcileDraftsInStore(drafts, readyKeys);
+    const fsKeys = new Set(fsProjects.map((p) => p.key));
+    const pendingDrafts = remainingDrafts
         .map(pendingToProjectItem)
         .filter((p) => !fsKeys.has(p.key));
-    const merged = [...pending, ...fsProjects]
+    const draftingOnDisk = fsProjects.filter((p) => p.status === 'pending');
+    const activeOnDisk = fsProjects.filter((p) => p.status === 'active');
+    const merged = [...pendingDrafts, ...draftingOnDisk, ...activeOnDisk]
         .map((item) => applyProjectOverrides(item, overrides))
         .filter((p) => !hidden.has(p.key));
     const projects = merged.sort((a, b) => a.project.localeCompare(b.project) || b.version.localeCompare(a.version));
@@ -92,8 +107,8 @@ export async function loadProjectDetail(key) {
     const flowPath = findFlowPath(key);
     if (!flowPath)
         return indexItem;
-    const manifest = flowModules[flowPath].default;
-    if (!manifest || manifest.type !== 'flow')
+    const manifest = flowManifestFromModule(flowModules[flowPath]);
+    if (!manifest)
         return indexItem;
     const [pageMap, docs] = await Promise.all([
         loadPagesForProject(key),
@@ -107,6 +122,7 @@ export async function loadProjectDetail(key) {
         requirementsText: docs.requirementsText,
         prdText: docs.prdText,
         specErrors: validateFlowSpec(flow),
+        metaErrors: indexItem.metaErrors,
     };
     detailCache.set(key, item);
     return item;

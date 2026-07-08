@@ -10,6 +10,8 @@ export function designSystemForPlatform(platform) {
     return platform === 'mobile' ? 'elsa-pda' : 'elsa-enterprise';
 }
 export function isMobileDesignSystem(designSystem) {
+    if (!designSystem)
+        return false;
     return designSystem === 'elsa-pda' || designSystem.endsWith('-pda');
 }
 export function getProjectPlatform(item) {
