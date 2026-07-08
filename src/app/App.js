@@ -11,6 +11,7 @@ import { PublishResultModal } from './PublishResultModal';
 import { Toast } from './Toast';
 import { copyIteratePrompt } from '../lib/copyIteratePrompt';
 import { countValidationErrors, invalidateProjectsCache, loadProjectDetail, loadProjectsWithReconcile } from '../data/prototypes';
+import { canPublishProject } from '../lib/projectStore';
 import { fetchConfig, fetchPublishStatus, publishProjectPreview, } from '../lib/configApi';
 const DEV_POLL_MS = 3000;
 export function App() {
@@ -145,11 +146,11 @@ export function App() {
         skipped: true,
     }), []);
     const handleOpenPublish = useCallback(async () => {
-        if (!selected || selected.status === 'pending' || publishLoading || publishing)
+        if (!selected || !canPublishProject(selected) || publishLoading || publishing)
             return;
         if (!publishConfig?.publishConfigured) {
             setShowSettings(true);
-            showToast('请先在设置中配置远程服务器', 3500);
+            showToast('请先在设置中填写 Access Token 等发布配置', 3500);
             return;
         }
         setPublishLoading(true);
@@ -167,7 +168,7 @@ export function App() {
         }
     }, [selected, publishLoading, publishing, publishConfig, showToast, recordToResult]);
     const handlePublish = useCallback(async (force = false) => {
-        if (!selected || selected.status === 'pending' || publishing || !publishConfig?.publishConfigured) {
+        if (!selected || !canPublishProject(selected) || publishing || !publishConfig?.publishConfigured) {
             return;
         }
         setPublishing(true);

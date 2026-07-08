@@ -11,6 +11,12 @@ export function slugExists(slug, version = 'v1') {
         return true;
     return getFilesystemSlugs().has(slug);
 }
+export function isLocalPendingDraft(item) {
+    return item.status === 'pending' && Boolean(item.prompt);
+}
+export function canPublishProject(item) {
+    return item.status !== 'pending' || !item.prompt;
+}
 export function getProjectStatus(item) {
     return item.meta.status ?? 'draft';
 }

@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useEffect, useMemo, useState } from 'react';
-import { getProjectStatus, matchProjectSearch } from '../lib/projectStore';
+import { getProjectStatus, isLocalPendingDraft, matchProjectSearch } from '../lib/projectStore';
 import { PLATFORM_ICONS, PLATFORM_LABELS, getProjectPlatform, groupProjectsByPlatform, } from '../lib/projectPlatform';
 import { PROJECT_STATUS_LABELS } from '../lib/projectStatus';
 import { FaIcon } from '@prototype/ui/Icon';
@@ -80,11 +80,16 @@ function PlatformSection({ platform, items, selectedKey, expanded, onToggle, onS
                         }, children: _jsx(FaIcon, { className: "fas fa-plus text-[10px]" }) })] }), expanded ? (_jsx("div", { id: sectionId, children: items.length === 0 ? (_jsx("p", { className: "text-[11px] text-text-muted px-2 py-2", children: "\u6682\u65E0\u9879\u76EE\uFF0C\u70B9\u51FB + \u521B\u5EFA" })) : (_jsx("ul", { className: "space-y-1", children: items.map((item) => (_jsx(ProjectListItem, { item: item, platform: platform, selected: selectedKey === item.key, onSelect: () => onSelect(item.key) }, item.key))) })) })) : null] }));
 }
 function ProjectListItem({ item, platform, selected, onSelect, }) {
-    const isPending = item.status === 'pending';
+    const isPendingDraft = isLocalPendingDraft(item);
+    const isPendingOnDisk = item.status === 'pending' && !item.prompt;
     const errCount = item.specErrors.length + item.metaErrors.length;
     const status = getProjectStatus(item);
-    const statusLabel = isPending ? '待创建' : PROJECT_STATUS_LABELS[status];
-    const statusStyle = isPending
+    const statusLabel = isPendingDraft
+        ? '待创建'
+        : isPendingOnDisk
+            ? '待完善'
+            : PROJECT_STATUS_LABELS[status];
+    const statusStyle = isPendingDraft || isPendingOnDisk
         ? 'bg-amber-100/80 text-amber-800'
         : errCount > 0
             ? 'bg-red-100/80 text-red-700'
@@ -93,5 +98,5 @@ function ProjectListItem({ item, platform, selected, onSelect, }) {
                 : status === 'review'
                     ? 'bg-sky-100/80 text-sky-700'
                     : 'bg-stone-100/80 text-stone-600';
-    return (_jsx("li", { children: _jsxs("button", { type: "button", onClick: onSelect, className: `sidebar-item group ${selected ? 'selected' : ''}`, children: [_jsxs("div", { className: "flex items-start justify-between gap-2 min-w-0", children: [_jsx("span", { className: `text-sm truncate flex-1 leading-snug ${selected ? 'font-semibold' : 'font-medium text-dark'}`, children: item.meta.title }), _jsx("span", { className: `shrink-0 text-[10px] px-1.5 py-0.5 rounded font-medium ${selected ? 'bg-white/20 text-white' : statusStyle}`, children: errCount > 0 && !isPending ? `${errCount}错` : statusLabel })] }), _jsxs("p", { className: `text-[11px] mt-1 truncate flex items-center gap-1.5 ${selected ? 'text-white/60' : 'text-text-muted'}`, children: [_jsx(FaIcon, { className: `fas ${PLATFORM_ICONS[platform]} text-[9px] opacity-70` }), item.key] })] }) }));
+    return (_jsx("li", { children: _jsxs("button", { type: "button", onClick: onSelect, className: `sidebar-item group ${selected ? 'selected' : ''}`, children: [_jsxs("div", { className: "flex items-start justify-between gap-2 min-w-0", children: [_jsx("span", { className: `text-sm truncate flex-1 leading-snug ${selected ? 'font-semibold' : 'font-medium text-dark'}`, children: item.meta.title }), _jsx("span", { className: `shrink-0 text-[10px] px-1.5 py-0.5 rounded font-medium ${selected ? 'bg-white/20 text-white' : statusStyle}`, children: errCount > 0 && !isPendingDraft && !isPendingOnDisk ? `${errCount}错` : statusLabel })] }), _jsxs("p", { className: `text-[11px] mt-1 truncate flex items-center gap-1.5 ${selected ? 'text-white/60' : 'text-text-muted'}`, children: [_jsx(FaIcon, { className: `fas ${PLATFORM_ICONS[platform]} text-[9px] opacity-70` }), item.key] })] }) }));
 }

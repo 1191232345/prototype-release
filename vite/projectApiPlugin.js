@@ -90,96 +90,102 @@ function sendJson(res, status, body) {
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
     res.end(JSON.stringify(body));
 }
+function attachProjectApi(server) {
+    server.middlewares.use(servePublishedStatic(server.config.root));
+    server.middlewares.use(async (req, res, next) => {
+        const url = req.url?.split('?')[0];
+        if (url === '/api/config' && req.method === 'GET') {
+            try {
+                sendJson(res, 200, { ok: true, config: getPublicConfig(server.config.root) });
+            }
+            catch (err) {
+                sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : '读取配置失败' });
+            }
+            return;
+        }
+        if (url === '/api/config' && req.method === 'POST') {
+            try {
+                const body = (await readJsonBody(req));
+                const config = updateConfig(server.config.root, body);
+                sendJson(res, 200, { ok: true, config });
+            }
+            catch (err) {
+                sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : '保存配置失败' });
+            }
+            return;
+        }
+        if (url === '/api/publish/status' && req.method === 'GET') {
+            try {
+                const params = new URL(req.url ?? '', 'http://local').searchParams;
+                const projectKey = params.get('projectKey')?.trim() ?? '';
+                if (!projectKey) {
+                    sendJson(res, 400, { ok: false, error: '缺少 projectKey' });
+                    return;
+                }
+                const config = getPublicConfig(server.config.root);
+                const target = params.get('target')?.trim() === 'github' ? 'github' : config.publishTarget;
+                const status = getPublishStatus(server.config.root, projectKey, target);
+                sendJson(res, 200, { ok: true, ...status });
+            }
+            catch (err) {
+                sendJson(res, 400, { ok: false, error: err instanceof Error ? err.message : '读取发布状态失败' });
+            }
+            return;
+        }
+        if (url === '/api/publish' && req.method === 'POST') {
+            try {
+                const body = (await readJsonBody(req));
+                const projectKey = typeof body.projectKey === 'string' ? body.projectKey.trim() : '';
+                if (!projectKey) {
+                    sendJson(res, 400, { ok: false, error: '缺少 projectKey' });
+                    return;
+                }
+                const config = getPublicConfig(server.config.root);
+                const target = typeof body.target === 'string' && body.target.trim()
+                    ? body.target.trim()
+                    : config.publishTarget;
+                const options = {
+                    title: typeof body.title === 'string' ? body.title : '',
+                    force: body.force === true,
+                };
+                const result = target === 'github'
+                    ? publishProject(server.config.root, projectKey, options)
+                    : await publishProjectToServer(server.config.root, projectKey, options);
+                const payload = attachLocalPreviewUrl(server.config.root, server.config.server.port, projectKey, result);
+                sendJson(res, 200, { ok: true, ...payload });
+            }
+            catch (err) {
+                sendJson(res, 400, { ok: false, error: err instanceof Error ? err.message : '发布失败' });
+            }
+            return;
+        }
+        if (url === '/api/projects/delete' && req.method === 'POST') {
+            try {
+                const body = (await readJsonBody(req));
+                const projectKey = typeof body.projectKey === 'string' ? body.projectKey.trim() : '';
+                if (!projectKey) {
+                    sendJson(res, 400, { ok: false, error: '缺少 projectKey' });
+                    return;
+                }
+                const result = deleteProjectDirectory(server.config.root, projectKey);
+                sendJson(res, result.ok ? 200 : 400, result);
+            }
+            catch {
+                sendJson(res, 500, { ok: false, error: '删除请求处理失败' });
+            }
+            return;
+        }
+        next();
+    });
+}
 export function projectApiPlugin() {
     return {
         name: 'prototype-archive-project-api',
         configureServer(server) {
-            server.middlewares.use(servePublishedStatic(server.config.root));
-            server.middlewares.use(async (req, res, next) => {
-                const url = req.url?.split('?')[0];
-                if (url === '/api/config' && req.method === 'GET') {
-                    try {
-                        sendJson(res, 200, { ok: true, config: getPublicConfig(server.config.root) });
-                    }
-                    catch (err) {
-                        sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : '读取配置失败' });
-                    }
-                    return;
-                }
-                if (url === '/api/config' && req.method === 'POST') {
-                    try {
-                        const body = (await readJsonBody(req));
-                        const config = updateConfig(server.config.root, body);
-                        sendJson(res, 200, { ok: true, config });
-                    }
-                    catch (err) {
-                        sendJson(res, 500, { ok: false, error: err instanceof Error ? err.message : '保存配置失败' });
-                    }
-                    return;
-                }
-                if (url === '/api/publish/status' && req.method === 'GET') {
-                    try {
-                        const params = new URL(req.url ?? '', 'http://local').searchParams;
-                        const projectKey = params.get('projectKey')?.trim() ?? '';
-                        if (!projectKey) {
-                            sendJson(res, 400, { ok: false, error: '缺少 projectKey' });
-                            return;
-                        }
-                        const config = getPublicConfig(server.config.root);
-                        const target = params.get('target')?.trim() === 'github' ? 'github' : config.publishTarget;
-                        const status = getPublishStatus(server.config.root, projectKey, target);
-                        sendJson(res, 200, { ok: true, ...status });
-                    }
-                    catch (err) {
-                        sendJson(res, 400, { ok: false, error: err instanceof Error ? err.message : '读取发布状态失败' });
-                    }
-                    return;
-                }
-                if (url === '/api/publish' && req.method === 'POST') {
-                    try {
-                        const body = (await readJsonBody(req));
-                        const projectKey = typeof body.projectKey === 'string' ? body.projectKey.trim() : '';
-                        if (!projectKey) {
-                            sendJson(res, 400, { ok: false, error: '缺少 projectKey' });
-                            return;
-                        }
-                        const config = getPublicConfig(server.config.root);
-                        const target = typeof body.target === 'string' && body.target.trim()
-                            ? body.target.trim()
-                            : config.publishTarget;
-                        const options = {
-                            title: typeof body.title === 'string' ? body.title : '',
-                            force: body.force === true,
-                        };
-                        const result = target === 'github'
-                            ? publishProject(server.config.root, projectKey, options)
-                            : await publishProjectToServer(server.config.root, projectKey, options);
-                        const payload = attachLocalPreviewUrl(server.config.root, server.config.server.port, projectKey, result);
-                        sendJson(res, 200, { ok: true, ...payload });
-                    }
-                    catch (err) {
-                        sendJson(res, 400, { ok: false, error: err instanceof Error ? err.message : '发布失败' });
-                    }
-                    return;
-                }
-                if (url === '/api/projects/delete' && req.method === 'POST') {
-                    try {
-                        const body = (await readJsonBody(req));
-                        const projectKey = typeof body.projectKey === 'string' ? body.projectKey.trim() : '';
-                        if (!projectKey) {
-                            sendJson(res, 400, { ok: false, error: '缺少 projectKey' });
-                            return;
-                        }
-                        const result = deleteProjectDirectory(server.config.root, projectKey);
-                        sendJson(res, result.ok ? 200 : 400, result);
-                    }
-                    catch {
-                        sendJson(res, 500, { ok: false, error: '删除请求处理失败' });
-                    }
-                    return;
-                }
-                next();
-            });
+            attachProjectApi(server);
+        },
+        configurePreviewServer(server) {
+            attachProjectApi(server);
         },
     };
 }
