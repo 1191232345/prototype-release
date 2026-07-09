@@ -4,12 +4,15 @@ import { MobileDeviceFrame } from '@prototype/ui';
 import { useFlowNav } from '@prototype/renderer/FlowContext';
 import { Toast } from '../../app/Toast';
 import { reviewTarget } from '../../lib/reviewLink';
+import { SkuFillPdaSurplusTask } from './SkuFillPdaSurplusTask';
 import { FaIcon } from '@prototype/ui/Icon';
 export function SkuFillPdaTaskPattern({ spec }) {
     const flow = useFlowNav();
     const reviewPrefix = flow?.currentPage === 'task' ? 'form' : 'pda';
     const rowId = flow?.params?.rowId ?? '';
     const detail = (rowId ? spec.details?.[rowId] : undefined) ?? spec.detail;
+    const hasSkuFormDetail = detail?.sections?.some((s) => s.layout === 'pda-sku-form');
+    const isSurplusInventoryTask = Boolean(spec.sections?.length) && !hasSkuFormDetail;
     const listPageId = flow?.pageLabels?.list !== undefined
         ? 'list'
         : flow?.pageLabels?.['pda-list'] !== undefined
@@ -17,6 +20,10 @@ export function SkuFillPdaTaskPattern({ spec }) {
             : null;
     const [toastMessage, setToastMessage] = useState(null);
     const [instructionSheet, setInstructionSheet] = useState(null);
+    const [rfidMode, setRfidMode] = useState('scan');
+    const [scanInput, setScanInput] = useState('');
+    const [rfidInStock, setRfidInStock] = useState(() => new Set());
+    const [rfidNotInStock, setRfidNotInStock] = useState(() => new Set());
     const showToast = (message) => {
         setToastMessage(message);
         setTimeout(() => setToastMessage(null), 1800);
@@ -36,11 +43,71 @@ export function SkuFillPdaTaskPattern({ spec }) {
         }
         showToast(label ? `${label}（原型演示）` : '操作成功');
     };
+    if (isSurplusInventoryTask) {
+        return (_jsx(SkuFillPdaSurplusTask, { spec: spec, rowId: rowId, status: flow?.params?.status ?? '', rowDetail: rowId ? spec.details?.[rowId] : undefined, listPageId: listPageId, reviewPrefix: reviewPrefix }));
+    }
     if (!detail) {
         const preview = extractRfidPreview(spec);
-        const pendingRfid = preview.catalog.slice(0, Math.max(preview.catalog.length - 1, 0));
-        const completedRfid = preview.catalog.slice(-1);
-        return (_jsx(MobileDeviceFrame, { children: _jsxs("div", { className: "relative flex flex-col flex-1 min-h-0 bg-surface", children: [_jsxs("header", { className: "shrink-0 bg-primary text-white px-3 py-2.5 border-b-2 border-accent", children: [listPageId ? (_jsxs("button", { type: "button", className: "flex items-center gap-1 text-[11px] text-white/80 mb-1 -ml-0.5", onClick: goBack, children: [_jsx(FaIcon, { className: "fas fa-chevron-left text-[10px]" }), "\u8FD4\u56DE\u5217\u8868"] })) : null, _jsx("h1", { className: "text-[15px] font-semibold leading-tight truncate", children: preview.sku }), _jsx("p", { className: "text-[11px] text-white/75 mt-0.5 truncate", children: preview.meta })] }), _jsxs("div", { className: "flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 space-y-3", children: [_jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "RFID \u64CD\u4F5C\u6A21\u5F0F" }), _jsxs("div", { className: "flex gap-2", children: [_jsx("span", { className: "px-2 py-1 rounded bg-accent/10 text-accent text-xs font-semibold", children: "\u626B\u63CF\u6A21\u5F0F" }), _jsx("span", { className: "px-2 py-1 rounded bg-light-bg text-text-secondary text-xs font-semibold", children: "\u70B9\u9009\u6A21\u5F0F" })] })] }), _jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "\u5F85\u64CD\u4F5C RFID \u5217\u8868" }), _jsx("div", { className: "space-y-1.5", children: pendingRfid.map((rfid) => (_jsxs("div", { className: "flex items-center justify-between rounded border border-border px-2 py-1.5 text-xs", children: [_jsx("span", { className: "font-mono text-text-secondary", children: rfid }), _jsx("span", { className: "text-amber-700 font-medium", children: "\u5F85\u786E\u8BA4" })] }, rfid))) })] }), _jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "\u5DF2\u5B8C\u6210 RFID \u5217\u8868" }), _jsx("div", { className: "space-y-1.5", children: completedRfid.map((rfid) => (_jsxs("div", { className: "flex items-center justify-between rounded border border-green-200 bg-green-50 px-2 py-1.5 text-xs", children: [_jsx("span", { className: "font-mono text-green-900", children: rfid }), _jsx("span", { className: "text-green-700 font-medium", children: "\u5DF2\u786E\u8BA4\u5728\u5E93" })] }, rfid))) })] })] })] }) }));
+        const pendingRfid = preview.catalog.filter((rfid) => !rfidInStock.has(rfid) && !rfidNotInStock.has(rfid));
+        const completedRfid = preview.catalog.filter((rfid) => rfidInStock.has(rfid) || rfidNotInStock.has(rfid));
+        const toggleRfid = (rfid, target) => {
+            if (target === 'in') {
+                setRfidInStock((prev) => {
+                    const next = new Set(prev);
+                    if (next.has(rfid))
+                        next.delete(rfid);
+                    else
+                        next.add(rfid);
+                    return next;
+                });
+                setRfidNotInStock((prev) => {
+                    const next = new Set(prev);
+                    next.delete(rfid);
+                    return next;
+                });
+                return;
+            }
+            setRfidNotInStock((prev) => {
+                const next = new Set(prev);
+                if (next.has(rfid))
+                    next.delete(rfid);
+                else
+                    next.add(rfid);
+                return next;
+            });
+            setRfidInStock((prev) => {
+                const next = new Set(prev);
+                next.delete(rfid);
+                return next;
+            });
+        };
+        const applyScanInput = () => {
+            const scanned = scanInput
+                .split('\n')
+                .map((line) => line.trim())
+                .filter(Boolean);
+            if (!scanned.length)
+                return;
+            setRfidInStock((prev) => {
+                const next = new Set(prev);
+                scanned.forEach((code) => {
+                    if (preview.catalog.includes(code))
+                        next.add(code);
+                });
+                return next;
+            });
+            setRfidNotInStock((prev) => {
+                const next = new Set(prev);
+                scanned.forEach((code) => next.delete(code));
+                return next;
+            });
+            showToast('已按扫描结果更新在库 RFID');
+        };
+        return (_jsx(MobileDeviceFrame, { children: _jsxs("div", { className: "relative flex flex-col flex-1 min-h-0 bg-surface", children: [_jsxs("header", { className: "shrink-0 bg-primary text-white px-3 py-2.5 border-b-2 border-accent", children: [listPageId ? (_jsxs("button", { type: "button", className: "flex items-center gap-1 text-[11px] text-white/80 mb-1 -ml-0.5", onClick: goBack, children: [_jsx(FaIcon, { className: "fas fa-chevron-left text-[10px]" }), "\u8FD4\u56DE\u5217\u8868"] })) : null, _jsx("h1", { className: "text-[15px] font-semibold leading-tight truncate", children: preview.sku }), _jsx("p", { className: "text-[11px] text-white/75 mt-0.5 truncate", children: preview.meta })] }), _jsxs("div", { className: "flex-1 min-h-0 overflow-y-auto overscroll-contain p-3 space-y-3", children: [_jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "RFID \u64CD\u4F5C\u6A21\u5F0F" }), _jsxs("div", { className: "flex gap-2", children: [_jsx("button", { type: "button", className: `px-2 py-1 rounded text-xs font-semibold border ${rfidMode === 'scan'
+                                                    ? 'bg-accent/10 text-accent border-accent/30'
+                                                    : 'bg-light-bg text-text-secondary border-border'}`, onClick: () => setRfidMode('scan'), children: "\u626B\u63CF\u6A21\u5F0F" }), _jsx("button", { type: "button", className: `px-2 py-1 rounded text-xs font-semibold border ${rfidMode === 'select'
+                                                    ? 'bg-accent/10 text-accent border-accent/30'
+                                                    : 'bg-light-bg text-text-secondary border-border'}`, onClick: () => setRfidMode('select'), children: "\u70B9\u9009\u6A21\u5F0F" })] }), rfidMode === 'scan' ? (_jsxs("div", { className: "mt-2 space-y-2", children: [_jsx("textarea", { className: "w-full min-h-16 text-xs border border-border rounded-md px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-accent/30", placeholder: "\u6BCF\u884C\u4E00\u4E2A RFID \u7F16\u7801\uFF0C\u70B9\u51FB\u4E0B\u65B9\u6309\u94AE\u6A21\u62DF\u626B\u7801\u5165\u5E93", value: scanInput, onChange: (e) => setScanInput(e.target.value) }), _jsx("button", { type: "button", className: "w-full h-8 rounded-md bg-accent text-white text-xs font-semibold", onClick: applyScanInput, children: "\u5E94\u7528\u626B\u63CF\u7ED3\u679C" })] })) : null] }), _jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "\u5F85\u64CD\u4F5C RFID \u5217\u8868" }), _jsx("div", { className: "space-y-1.5", children: pendingRfid.map((rfid) => (_jsxs("div", { className: "flex items-center justify-between rounded border border-border px-2 py-1.5 text-xs", children: [_jsx("span", { className: "font-mono text-text-secondary", children: rfid }), rfidMode === 'select' ? (_jsxs("div", { className: "flex gap-1", children: [_jsx("button", { type: "button", className: "px-1.5 py-0.5 rounded border border-green-300 text-green-700", onClick: () => toggleRfid(rfid, 'in'), children: "\u5728\u5E93" }), _jsx("button", { type: "button", className: "px-1.5 py-0.5 rounded border border-amber-300 text-amber-700", onClick: () => toggleRfid(rfid, 'out'), children: "\u4E0D\u5728\u5E93" })] })) : (_jsx("span", { className: "text-amber-700 font-medium", children: "\u5F85\u786E\u8BA4" }))] }, rfid))) })] }), _jsxs("section", { className: "rounded-lg border border-border-light bg-white p-3", children: [_jsx("h2", { className: "text-sm font-semibold text-primary mb-2", children: "\u5DF2\u5B8C\u6210 RFID \u5217\u8868" }), _jsx("div", { className: "space-y-1.5", children: completedRfid.map((rfid) => (_jsxs("div", { className: "flex items-center justify-between rounded border border-green-200 bg-green-50 px-2 py-1.5 text-xs", children: [_jsx("span", { className: `font-mono ${rfidNotInStock.has(rfid) ? 'text-amber-900' : 'text-green-900'}`, children: rfid }), _jsx("span", { className: `font-medium ${rfidNotInStock.has(rfid) ? 'text-amber-700' : 'text-green-700'}`, children: rfidNotInStock.has(rfid) ? '已标记不在库' : '已确认在库' })] }, rfid))) })] })] })] }) }));
     }
     const infoSection = detail.sections.find((s) => s.layout === 'grid' && s.items);
     const formSections = detail.sections.filter((s) => s.layout === 'pda-sku-form');

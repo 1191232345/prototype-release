@@ -6,6 +6,7 @@ import { getPublicConfig, updateConfig } from '../scripts/settings-store.mjs';
 import { publishProject } from '../scripts/publish-project.mjs';
 import { publishProjectToServer } from '../scripts/publish-to-server.mjs';
 import { getPublishStatus } from '../scripts/publish-record.mjs';
+import { buildLocalPrototypePreview } from '../scripts/local-preview.mjs';
 import { previewUrl, publishedRoot, resolvePublishPath, } from '../scripts/publish-bundle.mjs';
 function attachLocalPreviewUrl(root, port, projectKey, result) {
     const sourceDir = resolveProjectDir(root, projectKey);
@@ -180,6 +181,26 @@ function attachProjectApi(server) {
                 sendJson(res, 500, {
                     ok: false,
                     error: err instanceof Error ? err.message : '创建项目失败',
+                });
+            }
+            return;
+        }
+        if (url === '/api/projects/local-preview' && req.method === 'POST') {
+            try {
+                const body = (await readJsonBody(req));
+                const projectKey = typeof body.projectKey === 'string' ? body.projectKey.trim() : '';
+                if (!projectKey) {
+                    sendJson(res, 400, { ok: false, error: '缺少 projectKey' });
+                    return;
+                }
+                const host = `http://localhost:${server.config.server.port || 5173}/`;
+                const result = buildLocalPrototypePreview(server.config.root, projectKey, host);
+                sendJson(res, 200, { ok: true, ...result });
+            }
+            catch (err) {
+                sendJson(res, 400, {
+                    ok: false,
+                    error: err instanceof Error ? err.message : '生成本地预览失败',
                 });
             }
             return;
