@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { prototypeAliases } from './vite/aliases';
 import { fileURLToPath, URL } from 'node:url';
 const r = (p) => fileURLToPath(new URL(p, import.meta.url));
 export default defineConfig({
@@ -13,10 +14,6 @@ export default defineConfig({
         },
     },
     resolve: {
-        alias: {
-            '@prototype/ui': r('./src/packages/ui'),
-            '@prototype/patterns': r('./src/packages/patterns'),
-            '@prototype/renderer': r('./src/packages/renderer'),
-        },
+        alias: prototypeAliases(),
     },
 });

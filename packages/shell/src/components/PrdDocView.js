@@ -1,0 +1,6 @@
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { RequirementsDocView } from './RequirementsDocView';
+import { FaIcon } from '@prototype/ui/Icon';
+export function PrdDocView({ text, compact = false, dense = false, pageScope = null, highlightKey = null, highlightTableRow = null, locateToken = 0, scrollContainerRef = null, interactive = false, onPrdPick, editable = false, sectionEditor, project, originalPrdText, }) {
+    return (_jsxs("div", { className: "logic-doc", children: [!compact && (_jsxs("div", { className: "mb-6 flex items-center gap-3 pb-4 border-b border-border-light", children: [_jsx(FaIcon, { className: "fas fa-file-contract text-accent text-lg" }), _jsx("h1", { className: "font-semibold text-accent text-lg", children: "\u4EA7\u54C1\u9700\u6C42\u6587\u6863\uFF08PRD\uFF09" })] })), _jsx(RequirementsDocView, { text: text, compact: true, dense: dense, pageScope: pageScope, highlightKey: highlightKey, highlightTableRow: highlightTableRow, locateToken: locateToken, scrollContainerRef: scrollContainerRef, interactive: interactive, onPrdPick: onPrdPick, editable: editable, sectionEditor: sectionEditor, project: project, originalPrdText: originalPrdText })] }));
+}

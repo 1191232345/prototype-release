@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  content: ['./index.html', './packages/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -11,11 +11,12 @@ export default {
         warning: '#D4853A',
         danger: '#C44536',
         dark: '#1A1A2E',
-        surface: '#F5F3EF',
+        surface: '#FAF8F4',
+        'surface-alt': '#F1EEE8',
         hover: '#EDE9E3',
-        border: '#D8D5CE',
-        'border-light': '#E8E5DF',
-        'light-bg': '#F5F3EF',
+        border: '#E2DFD8',
+        'border-light': '#EBE8E2',
+        'light-bg': '#FAF8F4',
         'text-secondary': '#5A6275',
         'text-muted': '#8B93A5',
       },

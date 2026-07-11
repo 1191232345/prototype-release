@@ -1,0 +1,7 @@
+{
+  "name": "@prototype/runtime",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "原型运行时：Pattern 组件、Renderer、UI  kit、review 对照"
+}

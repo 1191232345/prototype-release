@@ -1,0 +1,7 @@
+{
+  "name": "@prototype/shell",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "原型归档工具壳层：App UI、项目数据、Prompt、发布配置"
+}

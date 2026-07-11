@@ -1,0 +1,617 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #1b3a4b;
+  --color-primary-light: #2a5568;
+  --color-accent: #e8a838;
+  --color-surface: #faf8f4;
+  --color-surface-alt: #f1eee8;
+  --color-hover: #ede9e3;
+  --color-border: #e2dfd8;
+  --color-border-light: #ebe8e2;
+  --color-text-secondary: #5a6275;
+  --color-text-muted: #8b93a5;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-soft: 0 1px 3px rgba(27, 58, 75, 0.06);
+  --shadow-card: 0 4px 20px rgba(27, 58, 75, 0.08);
+}
+
+body {
+  @apply bg-surface text-dark antialiased;
+  font-family: 'IBM Plex Sans', sans-serif;
+}
+
+/* ── Buttons ── */
+.btn {
+  @apply inline-flex items-center justify-center px-4 py-2 text-sm font-semibold rounded-lg cursor-pointer transition-colors;
+}
+
+.btn-primary {
+  @apply text-white;
+  background: var(--color-primary);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-light);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  @apply bg-white text-dark border border-border;
+}
+
+.btn-secondary:hover {
+  @apply border-primary bg-white;
+  background: #faf9f7;
+}
+
+.btn-ghost {
+  @apply text-text-secondary hover:text-primary hover:bg-hover;
+}
+
+/* ── Forms ── */
+.form-input {
+  @apply w-full px-3 py-2 text-sm border border-border rounded-lg bg-white
+    focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary transition-all;
+}
+
+.form-label {
+  @apply block text-xs font-semibold text-text-secondary mb-1.5 tracking-wide;
+}
+
+/* ── Badges ── */
+.badge {
+  @apply inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold leading-none;
+}
+
+.badge-accent { @apply bg-accent/15 text-amber-800; }
+.badge-success { @apply bg-emerald-50 text-emerald-700; }
+.badge-danger { @apply bg-red-50 text-red-700; }
+.badge-secondary { @apply bg-stone-100 text-stone-600; }
+
+/* ── Icon buttons ── */
+.icon-btn {
+  @apply inline-flex items-center justify-center rounded-lg text-text-muted
+    hover:text-primary hover:bg-hover transition-colors;
+}
+
+.sidebar-icon-btn {
+  @apply icon-btn w-8 h-8 text-sm;
+}
+
+.sidebar-search-input {
+  @apply py-2 text-sm bg-surface/60 border-border-light;
+  padding-left: 2.375rem;
+  padding-right: 0.75rem;
+}
+
+.toolbar-icon-btn {
+  @apply icon-btn w-9 h-9 text-sm;
+}
+
+.toolbar-icon-btn.danger:hover {
+  @apply text-danger bg-red-50;
+}
+
+.action-btn {
+  @apply inline-flex items-center justify-center w-8 h-8 rounded-lg
+    text-text-muted hover:text-primary hover:bg-hover transition-colors;
+}
+
+/* ── Tab bar (underline style) ── */
+.tab-item {
+  @apply relative px-3 py-1.5 text-[13px] font-medium text-text-muted
+    hover:text-dark transition-colors inline-flex items-center gap-1.5 shrink-0;
+}
+
+.tab-item.active {
+  @apply text-primary;
+}
+
+.tab-item.active::after {
+  content: '';
+  @apply absolute bottom-0 left-2 right-2 h-0.5 bg-primary rounded-full;
+}
+
+/* ── Sidebar list item ── */
+.sidebar-item {
+  @apply relative w-full text-left px-3 py-2.5 rounded-lg transition-all duration-150;
+}
+
+.sidebar-item-bar {
+  @apply absolute left-0 top-2 bottom-2 w-[3px] rounded-full bg-accent
+    opacity-0 transition-opacity duration-150;
+}
+
+.sidebar-item.selected {
+  @apply bg-surface-alt;
+}
+
+.sidebar-item.selected .sidebar-item-bar {
+  @apply opacity-100;
+}
+
+.sidebar-item:not(.selected):hover {
+  @apply bg-hover/60;
+}
+
+/* ── Status dot (3-tier semantic) ── */
+.status-dot {
+  @apply inline-block w-1.5 h-1.5 rounded-full shrink-0;
+}
+.status-dot--normal { @apply bg-emerald-500; }
+.status-dot--pending { @apply bg-amber-400; }
+.status-dot--error { @apply bg-red-400; }
+
+/* ── Sidebar: 筛选 Popover ── */
+.sidebar-filter-btn {
+  @apply inline-flex items-center justify-center w-9 h-9 rounded-lg shrink-0
+    text-text-muted hover:text-primary hover:bg-hover transition-colors relative;
+}
+.sidebar-filter-btn.is-active {
+  @apply text-primary bg-primary/5;
+}
+.sidebar-filter-btn-dot {
+  @apply absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-accent;
+}
+.sidebar-filter-popover {
+  @apply absolute right-0 top-full mt-1.5 z-50 bg-white rounded-xl shadow-card
+    border border-border-light w-64 max-w-[calc(100vw-2rem)] overflow-hidden;
+  animation: filter-pop-in 0.12s ease-out;
+}
+@keyframes filter-pop-in {
+  from { opacity: 0; transform: scale(0.97) translateY(-2px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.sidebar-filter-section {
+  @apply px-3.5 py-3 border-b border-border-light last:border-b-0;
+}
+.sidebar-filter-label {
+  @apply text-[10px] font-semibold uppercase tracking-wider text-text-muted mb-2;
+}
+.sidebar-filter-chip {
+  @apply inline-flex items-center text-[11px] px-2.5 py-1 rounded-md
+    border border-border-light text-text-secondary bg-white
+    hover:border-primary/40 hover:text-primary transition-colors cursor-pointer;
+}
+.sidebar-filter-chip.is-active {
+  @apply border-primary/40 bg-primary/10 text-primary font-medium;
+}
+
+/* ── Sidebar: 分区展开内容淡入 ── */
+.sidebar-section-content {
+  animation: section-fade-in 0.18s ease-out;
+}
+@keyframes section-fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sidebar-platform-section {
+  @apply rounded-xl border border-border-light bg-surface-alt/60 p-2;
+}
+
+.sidebar-platform-header {
+  @apply flex items-center justify-between gap-2 px-1 mb-1.5;
+}
+
+.sidebar-platform-toggle {
+  @apply flex items-center gap-1.5 min-w-0 flex-1 text-left rounded-md py-0.5 -ml-0.5
+    hover:bg-hover/80 transition-colors;
+}
+
+.sidebar-platform-label {
+  @apply inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-wide min-w-0;
+}
+
+.sidebar-platform-label--pc {
+  @apply text-primary;
+}
+
+.sidebar-platform-label--mobile {
+  @apply text-teal-800;
+}
+
+.sidebar-platform-count {
+  @apply text-[10px] font-medium text-text-muted ml-0.5;
+}
+
+.sidebar-platform-add {
+  @apply w-6 h-6 rounded-md inline-flex items-center justify-center
+    text-text-muted hover:text-white hover:bg-primary transition-colors;
+}
+
+/* ── Sidebar: 紧凑下拉选择器（分组/排序） ── */
+.sidebar-seg-select {
+  @apply w-full text-xs font-medium text-dark border border-border-light rounded-md
+    bg-white py-1.5 pl-6 pr-2 cursor-pointer
+    focus:outline-none focus:ring-2 focus:ring-primary/15 focus:border-primary
+    transition-all appearance-none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3E%3Cpath fill='%237a8294' d='M0 2l4 4 4-4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 6px center;
+  background-size: 8px;
+}
+
+.sidebar-seg-select:hover {
+  @apply border-primary/40 bg-hover/40;
+}
+
+/* ── Sidebar: 标签筛选 chip ── */
+.sidebar-tag-chip {
+  @apply inline-flex items-center gap-0.5 text-[11px] px-1.5 py-0.5 rounded-md
+    border border-border-light text-text-muted bg-white
+    hover:border-primary/40 hover:text-primary transition-colors cursor-pointer;
+}
+
+.sidebar-tag-chip.is-active {
+  @apply border-primary/40 bg-primary/10 text-primary font-medium;
+}
+
+.sidebar-tag-chip--clear {
+  @apply text-text-muted hover:text-danger hover:border-danger/40;
+}
+
+/* ── Sidebar: 收藏星标 ── */
+.sidebar-favorite-star {
+  @apply inline-flex items-center justify-center w-5 h-5 rounded
+    text-text-muted/50 hover:text-amber-400 hover:bg-amber-50 transition-colors;
+}
+
+.sidebar-favorite-star.is-on {
+  @apply text-amber-400;
+}
+
+/* ── Sidebar: 标签/收藏分组标题 ── */
+.sidebar-platform-label--tag {
+  @apply text-teal-700;
+}
+
+.sidebar-platform-label--favorite {
+  @apply text-amber-600;
+}
+
+/* ── Logic doc (与规则配置逻辑说明一致) ── */
+.logic-doc .logic-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.logic-doc .logic-table th:first-child,
+.logic-doc .logic-table td:first-child {
+  @apply text-center;
+}
+
+.logic-doc--dense .logic-table th:first-child,
+.logic-doc--dense .logic-table td:first-child {
+  @apply w-10;
+}
+
+.logic-doc:not(.logic-doc--dense) .logic-table th:first-child,
+.logic-doc:not(.logic-doc--dense) .logic-table td:first-child {
+  @apply w-12;
+}
+
+/* ── Prose doc (legacy, 保留兼容) ── */
+.prose-doc h1,
+.prose-doc h2,
+.prose-doc h3 {
+  @apply text-dark font-semibold mt-6 mb-2;
+}
+
+.prose-doc {
+  @apply text-sm text-text-secondary leading-relaxed;
+}
+
+.prose-doc h1 { @apply text-xl mt-0 mb-4; }
+.prose-doc h2 { @apply text-base mt-8; }
+.prose-doc h3 { @apply text-sm mt-5; }
+
+.prose-doc ul {
+  @apply list-disc pl-5 space-y-1.5 my-3;
+}
+
+.prose-doc li {
+  @apply text-text-secondary;
+}
+
+.prose-doc p {
+  @apply my-2;
+}
+
+.prose-doc code {
+  @apply font-mono text-xs bg-stone-100 px-1.5 py-0.5 rounded;
+}
+
+/* ── Toast animation ── */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.toast-enter {
+  animation: toast-in 0.25s ease-out forwards;
+}
+
+/* ── Modal backdrop ── */
+.modal-backdrop {
+  @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+  background: rgba(26, 26, 46, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.modal-backdrop-contained {
+  @apply absolute inset-0 z-50 flex items-center justify-center p-3 overflow-hidden;
+  background: rgba(26, 26, 46, 0.45);
+  backdrop-filter: blur(4px);
+}
+
+/* ── Prototype preview container ── */
+.prototype-preview {
+  @apply min-w-0 w-full;
+}
+
+.prototype-stage {
+  @apply isolate;
+}
+
+.prototype-scroll {
+  @apply min-h-0;
+}
+
+.prototype-modal-host {
+  @apply absolute inset-0 z-40 pointer-events-none;
+}
+
+.prototype-modal-host > * {
+  pointer-events: auto;
+}
+
+.review-inspect-active .prototype-scroll {
+  cursor: default;
+}
+
+.review-inspect-overlay {
+  @apply absolute inset-0 z-10 cursor-crosshair pointer-events-none;
+  background: rgba(27, 58, 75, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(45, 147, 108, 0.12);
+}
+
+.review-inspect-hover-target {
+  @apply outline outline-2 outline-primary/50 outline-offset-2 bg-primary/5;
+  border-radius: 4px;
+}
+
+.prd-interactive-table tbody tr[role='button']:focus-visible {
+  @apply outline outline-2 outline-primary/40 outline-offset-[-2px];
+}
+
+/* ── Split review: T 型对称双栏布局 ── */
+.split-review-main {
+  @apply bg-surface;
+}
+
+/* resizer：桌面端作为双 card 之间的拖拽手柄 */
+.split-review-resizer {
+  @apply w-2 shrink-0 cursor-col-resize relative z-10 flex items-center justify-center;
+}
+
+.split-review-resizer::after {
+  content: '';
+  @apply absolute inset-y-0 -left-1.5 -right-1.5;
+}
+
+.split-review-resizer::before {
+  content: '';
+  @apply w-1 h-10 rounded-full bg-border-light/60 transition-all duration-150;
+}
+
+.split-review-resizer:hover::before,
+.split-review-resizer:active::before {
+  @apply bg-primary/50 h-12;
+}
+
+/* drawer：桌面端已通过 md: 前缀应用 card 样式，这里仅保留移动端全屏抽屉 */
+.split-review-drawer {
+  @apply z-20;
+}
+
+.split-review-drawer-header {
+  @apply backdrop-blur-sm;
+}
+
+.split-review-drawer-close {
+  @apply inline-flex items-center justify-center w-7 h-7 rounded-lg
+    text-text-muted hover:text-primary hover:bg-hover transition-colors shrink-0;
+}
+
+.split-review-drawer--left {
+  @apply md:border-r md:border-l-0;
+}
+
+.split-review-drawer--open {
+  @apply max-md:fixed max-md:inset-y-0 max-md:right-0 max-md:max-w-[min(100vw,420px)] max-md:w-full
+    max-md:border-l max-md:border-border-light max-md:shadow-[-4px_0_24px_rgba(27,58,75,0.06)];
+}
+
+.split-review-drawer--left.split-review-drawer--open {
+  @apply max-md:left-0 max-md:right-auto;
+}
+
+.split-review-backdrop {
+  @apply fixed inset-0 z-[15] bg-dark/30 md:hidden;
+}
+
+.split-review-doc-fab {
+  @apply fixed right-0 top-1/2 -translate-y-1/2 z-20
+    flex flex-col items-center gap-1 py-3 px-1.5
+    bg-white border border-border-light border-r-0
+    rounded-l-xl shadow-card text-primary
+    hover:bg-hover transition-colors;
+}
+
+.split-review-doc-fab-label {
+  @apply text-[10px] font-semibold;
+  writing-mode: vertical-rl;
+}
+
+/* ── Split Drawer: 统一 Header（Tab 切换 + 操作按钮） ── */
+.split-drawer-tab {
+  @apply inline-flex items-center gap-1 px-2 py-1 rounded-md text-[11px] font-medium
+    text-text-muted bg-transparent border border-transparent
+    hover:bg-hover hover:text-text-secondary transition-colors cursor-pointer;
+}
+
+.split-drawer-tab.is-active {
+  @apply bg-primary/10 text-primary border-primary/15 font-semibold;
+}
+
+.split-drawer-tab.is-empty {
+  @apply opacity-40 cursor-not-allowed;
+}
+
+.split-drawer-tab.is-empty.is-active {
+  @apply opacity-100;
+}
+
+.split-drawer-icon-btn {
+  @apply inline-flex items-center justify-center w-7 h-7 rounded-md
+    text-text-muted hover:text-primary hover:bg-hover transition-colors shrink-0
+    opacity-45 hover:opacity-100;
+}
+
+.split-drawer-icon-btn.is-on {
+  @apply bg-primary/10 text-primary opacity-100;
+}
+
+/* ── DocToc: 章节导航下拉 ── */
+.doc-toc {
+  @apply py-2;
+}
+
+.doc-toc-header {
+  @apply flex items-center gap-1.5 px-3 py-1.5 mb-1 border-b border-border-light;
+}
+
+.doc-toc-list {
+  @apply py-1 max-h-[50vh] overflow-y-auto;
+}
+
+.doc-toc-item {
+  @apply flex items-center gap-2 w-full px-3 py-1.5 text-left text-xs
+    text-text-secondary hover:bg-hover hover:text-dark transition-colors cursor-pointer;
+}
+
+.doc-toc-item.is-active {
+  @apply bg-primary/10 text-primary font-medium;
+}
+
+.doc-toc-item.is-highlighted {
+  @apply bg-amber-50 text-amber-800;
+}
+
+.doc-toc-item.is-highlighted.is-active {
+  @apply bg-amber-100;
+}
+
+.doc-toc-label {
+  @apply truncate flex-1;
+}
+
+.doc-toc-badge {
+  @apply text-[9px] px-1 py-0.5 rounded font-medium bg-stone-100 text-text-muted shrink-0;
+}
+
+.doc-toc-empty {
+  @apply flex flex-col items-center justify-center py-8 px-4 text-center;
+}
+
+/* ── Review inspect: hover prototype → locate PRD ── */
+.split-review-inspect-bar {
+  @apply backdrop-blur-sm;
+}
+
+.split-review-inspect-toggle {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium
+    border border-border-light bg-white text-text-secondary
+    hover:bg-hover transition-colors shrink-0;
+}
+
+.split-review-inspect-toggle.is-on {
+  @apply border-primary/30 bg-primary/5 text-primary;
+}
+
+.split-review-inspect-toggle.is-locked,
+.split-review-page-filter.is-locked {
+  @apply cursor-default pointer-events-none;
+}
+
+.split-review-inspect-badge {
+  @apply text-[10px] px-1 py-0.5 rounded font-semibold bg-stone-100 text-text-muted;
+}
+
+.split-review-inspect-badge.on {
+  @apply bg-primary/15 text-primary;
+}
+
+.split-review-chrome-bar--publish .split-review-page-filter--on-dark {
+  @apply inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium
+    bg-white/10 text-white/85 border border-white/15;
+}
+
+.split-review-interaction-hint {
+  @apply flex items-start gap-0;
+}
+
+.split-review-inspect-toggle--on-dark {
+  @apply border-white/20 bg-white/10 text-white/90 hover:bg-white/15;
+}
+
+.review-inspect-active [data-review-id] {
+  border-radius: 4px;
+}
+
+.split-review-page-filter {
+  @apply px-2 py-0.5 rounded text-[11px] font-medium border border-border-light
+    text-text-muted hover:bg-hover transition-colors;
+}
+
+.split-review-page-filter.is-on {
+  @apply border-primary/30 bg-primary/5 text-primary;
+}
+
+/* ── Scrollbar ── */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 4px;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}

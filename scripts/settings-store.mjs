@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { deriveGithubPagesBaseUrl, githubPublishMissing } from '../src/lib/githubUtils.js';
+import { deriveGithubPagesBaseUrl, githubPublishMissing } from '../packages/shell/src/lib/githubUtils.js';
 
 const DEFAULT_SETTINGS = {
   githubRepoUrl: '',

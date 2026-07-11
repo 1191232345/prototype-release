@@ -1,0 +1,808 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "prototype-spec-schema",
+  "title": "Prototype PageSpec",
+  "type": "object",
+  "required": ["pattern", "title"],
+  "additionalProperties": false,
+  "properties": {
+    "pattern": {
+      "type": "string",
+      "enum": ["rule-config-list", "rule-config-form", "rule-config-detail", "price-card-list", "price-card-form", "price-card-detail", "express-supplement-import-form", "sku-fill-list", "sku-fill-form", "sku-fill-detail-page", "sku-fill-audit-page", "sku-fill-pda-list", "sku-fill-pda-task"]
+    },
+    "version": { "type": "string" },
+    "title": { "type": "string", "minLength": 1 },
+    "pageMode": { "type": "string", "enum": ["view", "audit", "pda"] },
+    "mode": { "type": "string", "enum": ["spec", "hybrid", "escape"] },
+    "header": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "brand": { "type": "string" } }
+    },
+    "statusLabels": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "draft": { "type": "string" },
+        "published": { "type": "string" },
+        "voided": { "type": "string" }
+      }
+    },
+    "filters": { "type": "array", "items": { "$ref": "#/definitions/filterField" } },
+    "mainButtons": { "type": "array", "items": { "$ref": "#/definitions/mainButton" } },
+    "importModal": { "$ref": "#/definitions/importModal" },
+    "formModal": { "$ref": "#/definitions/formModal" },
+    "modals": { "type": "array", "items": { "$ref": "#/definitions/modalDefinition" } },
+    "table": { "$ref": "#/definitions/table" },
+    "details": { "type": "object", "additionalProperties": { "$ref": "#/definitions/rowDetail" } },
+    "detail": { "$ref": "#/definitions/rowDetail" },
+    "sections": { "type": "array", "items": { "$ref": "#/definitions/formSection" } },
+    "includeSections": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "合并 pages/shared.sections.{key}.json 片段"
+    },
+    "feeCategoryLayout": {
+      "type": "string",
+      "enum": ["tabbed", "split-cards", "dropdown"],
+      "description": "费用类型导航：tabbed=左右分栏单卡；split-cards=已废弃等同tabbed；dropdown=下拉"
+    },
+    "feeRowSamples": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "description": "详情页只读：预填费用表格行"
+    },
+    "customerPriceCardTable": { "$ref": "#/definitions/customerPriceCardTable" },
+    "editData": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "type": "string" }
+      }
+    },
+    "formActions": { "type": "array", "items": { "$ref": "#/definitions/formAction" } },
+    "warehouseOptions": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/selectOption" },
+      "description": "分仓配置：可选仓库列表（rule-config-form）"
+    },
+    "priceCardTemplates": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/selectOption" },
+      "description": "从价卡模板带入时的可选项（rule-config-form）"
+    },
+    "customerWarehouses": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "description": "客户代码 -> 授权仓库 ID 列表（rule-config-form）"
+    },
+    "quickFillModal": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "fields": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/formField" }
+        },
+        "message": { "type": "string" },
+        "messageType": { "type": "string", "enum": ["warning", "info", "error"] },
+        "actions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/formAction" }
+        }
+      },
+      "description": "快速填入弹窗配置（rule-config-form）"
+    },
+    "slots": { "type": "object", "additionalProperties": { "type": "string" } },
+    "publishMeta": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "skuOptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["value", "label"],
+        "additionalProperties": false,
+        "properties": {
+          "value": { "type": "string" },
+          "label": { "type": "string" },
+          "currentSize": { "type": "string" },
+          "currentWeight": { "type": "string" },
+          "currentImages": { "type": "string" }
+        }
+      }
+    },
+    "outboundOrderPresets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["value", "label", "customer", "warehouse", "skus"],
+        "additionalProperties": false,
+        "properties": {
+          "value": { "type": "string" },
+          "label": { "type": "string" },
+          "customer": { "type": "string" },
+          "warehouse": { "type": "string" },
+          "skus": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "detailMeta": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "mode": { "type": "string", "enum": ["view", "audit"] },
+          "returnReason": { "type": "string" },
+          "returnedBy": { "type": "string" },
+          "returnedAt": { "type": "string" }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "pattern": { "const": "rule-config-list" } } },
+      "then": { "required": ["table"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "rule-config-form" } } },
+      "then": { "required": ["sections"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "rule-config-detail" } } },
+      "then": {
+        "anyOf": [
+          { "required": ["detail"] },
+          { "required": ["sections"] }
+        ]
+      }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "price-card-list" } } },
+      "then": { "required": ["table"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "price-card-form" } } },
+      "then": { "required": ["sections"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "price-card-detail" } } },
+      "then": {
+        "anyOf": [
+          { "required": ["detail"] },
+          { "required": ["sections"] }
+        ]
+      }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "express-supplement-import-form" } } },
+      "then": { "required": ["customerPriceCardTable"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "sku-fill-list" } } },
+      "then": { "required": ["table"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "sku-fill-form" } } },
+      "then": { "required": ["sections"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "sku-fill-detail-page" } } },
+      "then": { "required": ["pageMode"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "sku-fill-audit-page" } } },
+      "then": { "required": ["pageMode"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "sku-fill-pda-list" } } },
+      "then": { "required": ["pageMode", "table"] }
+    },
+    {
+      "if": { "properties": { "pattern": { "const": "sku-fill-pda-task" } } },
+      "then": { "required": ["pageMode", "formActions"] }
+    }
+  ],
+  "definitions": {
+    "selectOption": {
+      "type": "object",
+      "required": ["value", "label"],
+      "additionalProperties": false,
+      "properties": {
+        "value": { "type": "string" },
+        "label": { "type": "string" }
+      }
+    },
+    "filterField": {
+      "type": "object",
+      "required": ["id", "label", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "type": { "type": "string", "enum": ["select", "multiSelect", "text", "datetime"] },
+        "placeholder": { "type": "string" },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "mainButton": {
+      "type": "object",
+      "required": ["id", "label", "action"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "icon": { "type": "string" },
+        "variant": { "type": "string", "enum": ["primary", "secondary", "danger"] },
+        "action": { "type": "string", "enum": ["openImportModal", "exportList", "batchDelete", "batchConfirm", "navigateForm", "openModal"] },
+        "modalId": { "type": "string" }
+      }
+    },
+    "importModal": {
+      "anyOf": [
+        {
+          "type": "object",
+          "required": ["title", "customerPriceCardTable"],
+          "additionalProperties": false,
+          "properties": {
+            "title": { "type": "string" },
+            "asyncThreshold": { "type": "integer", "minimum": 1 },
+            "filePresets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["fileName", "totalRows"],
+                "additionalProperties": false,
+                "properties": {
+                  "fileName": { "type": "string" },
+                  "totalRows": { "type": "integer", "minimum": 1 }
+                }
+              }
+            },
+            "customerPriceCardTable": { "$ref": "#/definitions/customerPriceCardTable" }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["title", "workOrderImportPreview"],
+          "additionalProperties": false,
+          "properties": {
+            "title": { "type": "string" },
+            "asyncThreshold": { "type": "integer", "minimum": 1 },
+            "filePresets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["fileName", "totalRows"],
+                "additionalProperties": false,
+                "properties": {
+                  "fileName": { "type": "string" },
+                  "totalRows": { "type": "integer", "minimum": 1 }
+                }
+              }
+            },
+            "workOrderImportPreview": { "$ref": "#/definitions/workOrderImportPreview" }
+          }
+        }
+      ]
+    },
+    "workOrderImportPreview": {
+      "type": "object",
+      "required": ["totalRows", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "fileName": { "type": "string" },
+        "totalRows": { "type": "integer", "minimum": 1 },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["customerCode", "warehouseCode", "skuCode", "priority"],
+            "additionalProperties": false,
+            "properties": {
+              "customerCode": { "type": "string" },
+              "warehouseCode": { "type": "string" },
+              "skuCode": { "type": "string" },
+              "priority": { "type": "string" },
+              "remark": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "table": {
+      "type": "object",
+      "required": ["columns", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "tree": { "type": "boolean" },
+        "masterDetail": { "type": "boolean" },
+        "defaultExpand": { "type": "boolean" },
+        "selectable": { "type": "boolean" },
+        "feeTypeTabs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" }
+            }
+          }
+        },
+        "columns": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["key", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" }
+            }
+          }
+        },
+        "rows": { "type": "array", "items": { "$ref": "#/definitions/tableRow" } }
+      }
+    },
+    "tableRow": {
+      "type": "object",
+      "required": ["id", "cells"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "rowType": { "type": "string", "enum": ["group", "leaf"] },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "published",
+            "voided",
+            "pending_warehouse",
+            "pending_review",
+            "returned",
+            "completed"
+          ]
+        },
+        "cells": { "type": "object" },
+        "actions": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string",
+                "enum": ["view", "edit", "publish", "delete", "void", "copy", "review"]
+              },
+              {
+                "type": "object",
+                "required": ["action", "label"],
+                "additionalProperties": false,
+                "properties": {
+                  "action": { "type": "string" },
+                  "label": { "type": "string" },
+                  "modalId": { "type": "string" }
+                }
+              }
+            ]
+          }
+        },
+        "children": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/tableRow" }
+        }
+      }
+    },
+    "formSection": {
+      "type": "object",
+      "required": ["title", "icon"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "icon": { "type": "string" },
+        "layout": { "type": "string", "enum": ["warehouse-list", "sku-line-table"] },
+        "maxRows": { "type": "integer", "minimum": 1 },
+        "fields": { "type": "array", "items": { "$ref": "#/definitions/formField" } },
+        "warehouseItems": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "code"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "code": { "type": "string" },
+              "configSummary": { "type": "string" },
+              "configured": { "type": "boolean" }
+            }
+          }
+        },
+        "warehouseActions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "action"],
+            "additionalProperties": false,
+            "properties": {
+              "label": { "type": "string" },
+              "icon": { "type": "string" },
+              "variant": { "type": "string", "enum": ["primary", "secondary", "danger"] },
+              "action": { "type": "string" }
+            }
+          }
+        },
+        "zonePriceTable": { "$ref": "#/definitions/zonePriceTable" },
+        "feeItemField": { "$ref": "#/definitions/feeItemField" },
+        "surchargeTable": { "$ref": "#/definitions/surchargeTable" },
+        "visibleWhen": { "$ref": "#/definitions/visibleWhen" },
+        "tabs": { "type": "array", "items": { "$ref": "#/definitions/formSectionTab" } }
+      }
+    },
+    "formSectionTab": {
+      "type": "object",
+      "required": ["label", "content"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "icon": { "type": "string" },
+        "content": { "$ref": "#/definitions/formSectionContent" }
+      }
+    },
+    "formSectionContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "fields": { "type": "array", "items": { "$ref": "#/definitions/formField" } },
+        "zonePriceTable": { "$ref": "#/definitions/zonePriceTable" },
+        "surchargeTable": { "$ref": "#/definitions/surchargeTable" }
+      }
+    },
+    "formField": {
+      "type": "object",
+      "required": ["id", "label", "type"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "type": { "type": "string", "enum": ["select", "multiSelect", "text", "textarea", "datetime", "radio"] },
+        "required": { "type": "boolean" },
+        "placeholder": { "type": "string" },
+        "defaultValue": { "type": "string" },
+        "span": { "type": "integer", "enum": [1, 2] },
+        "visibleWhen": { "$ref": "#/definitions/visibleWhen" },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "formAction": {
+      "type": "object",
+      "required": ["label", "variant"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "variant": { "type": "string", "enum": ["primary", "secondary"] },
+        "icon": { "type": "string" },
+        "action": { "type": "string" }
+      }
+    },
+    "rowDetail": {
+      "type": "object",
+      "required": ["sections"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "sections": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/detailSection" }
+        },
+        "timeline": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["time", "operator", "action"],
+            "additionalProperties": false,
+            "properties": {
+              "time": { "type": "string" },
+              "operator": { "type": "string" },
+              "action": { "type": "string" },
+              "remark": { "type": "string" },
+              "state": { "type": "string", "enum": ["done", "current", "pending"] }
+            }
+          }
+        }
+      }
+    },
+    "detailSection": {
+      "type": "object",
+      "required": ["title", "icon", "layout"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "icon": { "type": "string" },
+        "layout": { "type": "string", "enum": ["grid", "fee-list", "adjust-list", "zone-price-table", "sku-table", "pda-sku-form"] },
+        "items": { "type": "array", "items": { "$ref": "#/definitions/detailItem" } },
+        "feeGroups": { "type": "array" },
+        "adjustments": { "type": "array" },
+        "zonePriceTable": { "$ref": "#/definitions/zonePriceTable" },
+        "skuRows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["skuCode", "skuName"],
+            "additionalProperties": false,
+            "properties": {
+              "skuCode": { "type": "string" },
+              "skuName": { "type": "string" },
+              "length": { "type": "string" },
+              "width": { "type": "string" },
+              "height": { "type": "string" },
+              "weight": { "type": "string" },
+              "images": { "type": "array", "items": { "type": "string" } },
+              "submittedAt": { "type": "string" },
+              "submitted": { "type": "boolean" },
+              "fillInstruction": { "type": "string" }
+            }
+          }
+        },
+        "editable": { "type": "boolean" }
+      }
+    },
+    "detailItem": {
+      "type": "object",
+      "required": ["label", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "value": { "type": "string" },
+        "type": { "type": "string", "enum": ["text", "status", "badge"] },
+        "badgeClass": { "type": "string" }
+      }
+    },
+    "changelogEntry": {
+      "type": "object",
+      "required": ["version", "date", "title", "changes"],
+      "additionalProperties": false,
+      "properties": {
+        "version": { "type": "string" },
+        "date": { "type": "string" },
+        "title": { "type": "string" },
+        "changes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["item", "desc"],
+            "additionalProperties": false,
+            "properties": {
+              "item": { "type": "string" },
+              "desc": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "zonePriceTable": {
+      "type": "object",
+      "required": ["zones", "weightSegments", "prices"],
+      "additionalProperties": false,
+      "properties": {
+        "zones": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "weightSegments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["start", "end"],
+            "additionalProperties": false,
+            "properties": {
+              "start": { "type": "number" },
+              "end": { "type": "number" },
+              "unit": { "type": "string" },
+              "feeItem": { "type": "string" }
+            }
+          }
+        },
+        "prices": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "number" }
+          }
+        },
+        "currency": { "type": "string" },
+        "priceUnit": { "type": "string" }
+      }
+    },
+    "feeItemField": {
+      "type": "object",
+      "required": ["id", "label", "options"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "label": { "type": "string" },
+        "defaultValue": { "type": "string" },
+        "placeholder": { "type": "string" },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["value", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "surchargeTable": {
+      "type": "object",
+      "required": ["columns", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["key", "label", "type"],
+            "additionalProperties": false,
+            "properties": {
+              "key": { "type": "string" },
+              "label": { "type": "string" },
+              "type": { "type": "string", "enum": ["select", "multiSelect", "number", "text", "actions"] },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["value", "label"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "value": { "type": "string" },
+                    "label": { "type": "string" }
+                  }
+                }
+              },
+              "placeholder": { "type": "string" },
+              "actions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["type", "label", "action"],
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": { "type": "string", "enum": ["button"] },
+                    "label": { "type": "string" },
+                    "icon": { "type": "string" },
+                    "variant": { "type": "string", "enum": ["primary", "secondary", "danger"] },
+                    "action": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": { "type": "string" }
+          }
+        }
+      }
+    },
+    "visibleWhen": {
+      "type": "object",
+      "required": ["field", "values"],
+      "additionalProperties": false,
+      "properties": {
+        "field": { "type": "string" },
+        "values": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "customerPriceCardTable": {
+      "type": "object",
+      "required": ["totalRows", "priceCardOptions", "rows"],
+      "additionalProperties": false,
+      "properties": {
+        "fileName": { "type": "string" },
+        "totalRows": { "type": "integer", "minimum": 1 },
+        "priceCardOptions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["value", "label"],
+            "additionalProperties": false,
+            "properties": {
+              "value": { "type": "string" },
+              "label": { "type": "string" }
+            }
+          }
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["customerCode", "customerName", "rowCount", "defaultPriceCard"],
+            "additionalProperties": false,
+            "properties": {
+              "customerCode": { "type": "string" },
+              "customerName": { "type": "string" },
+              "rowCount": { "type": "integer", "minimum": 1 },
+              "defaultPriceCard": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "formModal": {
+      "type": "object",
+      "required": ["title"],
+      "additionalProperties": false,
+      "properties": {
+        "title": { "type": "string" },
+        "width": { "type": "string", "enum": ["default", "large", "small"] },
+        "sections": { "type": "array", "items": { "$ref": "#/definitions/formSection" } },
+        "formActions": { "type": "array", "items": { "$ref": "#/definitions/formAction" } }
+      }
+    },
+    "modalDefinition": {
+      "type": "object",
+      "required": ["id", "title"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "width": { "type": "string", "enum": ["default", "large", "small"] },
+        "sections": { "type": "array", "items": { "$ref": "#/definitions/formSection" } },
+        "formActions": { "type": "array", "items": { "$ref": "#/definitions/formAction" } },
+        "skuOptions": { "type": "array", "items": { "type": "object" } },
+        "outboundOrderPresets": { "type": "array", "items": { "type": "object" } },
+        "editData": { "type": "object", "additionalProperties": { "type": "object" } }
+      }
+    }
+  }
+}

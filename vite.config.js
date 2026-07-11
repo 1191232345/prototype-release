@@ -1,24 +1,24 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { fileURLToPath, URL } from 'node:url';
 import { projectApiPlugin } from './vite/projectApiPlugin';
 import { prototypeJsonPlugin } from './vite/prototypeJsonPlugin';
-const r = (p) => fileURLToPath(new URL(p, import.meta.url));
+import { prototypeAliases } from './vite/aliases';
 export default defineConfig({
     plugins: [prototypeJsonPlugin(), react(), projectApiPlugin()],
     resolve: {
-        alias: {
-            '@prototype/ui': r('./src/packages/ui'),
-            '@prototype/patterns': r('./src/packages/patterns'),
-            '@prototype/renderer': r('./src/packages/renderer'),
-        },
+        alias: prototypeAliases(),
     },
     build: {
         rollupOptions: {
             output: {
                 manualChunks(id) {
-                    if (!id.includes('node_modules'))
+                    if (!id.includes('node_modules')) {
+                        if (id.includes('/packages/runtime/'))
+                            return 'runtime';
+                        if (id.includes('/packages/shell/'))
+                            return 'shell';
                         return undefined;
+                    }
                     if (id.includes('@fortawesome'))
                         return 'vendor-icons';
                     if (id.includes('/ajv') || id.includes('json-schema'))

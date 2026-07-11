@@ -47,17 +47,33 @@ npm run build      # 类型检查 + 构建
 ## 目录结构
 
 ```
+packages/
+├── shell/                 # 工具壳层（改工具功能主要在这里）
+│   └── src/
+│       ├── app/           # UI：列表、预览、分屏、弹窗
+│       ├── lib/           # 工具逻辑：项目 CRUD、PRD 解析、发布配置
+│       │   └── prompt/    # Prompt 生成（create / iterate / template，统一从 lib/prompt 导入）
+│       └── data/          # 项目加载与 glob
+└── runtime/               # 原型运行时（业务 Pattern，很少动）
+    └── src/
+        ├── patterns/      # 业务 Pattern 组件
+        ├── renderer/      # Spec 渲染引擎
+        ├── ui/            # 共享 UI kit
+        └── review/        # PRD 对照 review-id
+
 prototypes/{project}/{version}/
-├── flow.json          # Flow 骨架（entry、pages 列表）
-├── pages/             # 按页面拆分的 PageSpec
+├── flow.json              # Flow 骨架（entry、pages 列表）
+├── pages/                 # 按页面拆分的 PageSpec
 │   ├── list.json
 │   └── form.json
-├── changelog.json     # 结构化变更记录（可选）
-├── meta.json          # 项目元信息
-├── CHANGELOG.md       # 变更记录
-├── REQUIREMENTS.md    # 需求文档（现状/痛点/验收标准）
-└── PRD.md             # 产品需求规格（可选）
+├── changelog.json         # 结构化变更记录（可选）
+├── meta.json              # 项目元信息
+├── CHANGELOG.md           # 变更记录
+├── REQUIREMENTS.md        # 需求文档（现状/痛点/验收标准）
+└── PRD.md                 # 产品需求规格（可选）
 ```
+
+改**工具功能**时优先看 `packages/shell/`；Cursor 会自动应用 `.cursor/rules/tool-dev.mdc` 范围约束。
 
 ## 规范
 
