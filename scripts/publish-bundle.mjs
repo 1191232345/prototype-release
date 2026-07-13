@@ -148,10 +148,14 @@ function patchPublishedIndexHtml(projectDest, meta) {
   fs.writeFileSync(indexPath, html, 'utf8');
 }
 
-function writeDocHtml(destRoot, publishPath, kind, title, markdown, root) {
+function writeDocHtml(destRoot, publishPath, kind, title, markdown, root, projectMeta = null) {
   const destDir = path.join(destRoot, 'docs', ...publishPath.split('/'));
   fs.mkdirSync(destDir, { recursive: true });
-  fs.writeFileSync(path.join(destDir, `${kind}.html`), renderDocHtml(root, markdown, { kind, title }), 'utf8');
+  fs.writeFileSync(
+    path.join(destDir, `${kind}.html`),
+    renderDocHtml(root, markdown, { kind, title, meta: projectMeta }),
+    'utf8',
+  );
 }
 
 /**
@@ -197,6 +201,7 @@ export function preparePublishBundle(root, projectKey, options = {}) {
       docTitle,
       fs.readFileSync(reqPath, 'utf8'),
       root,
+      meta,
     );
     docLinks.push({ label: '需求文档', href: `../../docs/${publishPath}/requirements.html` });
   }

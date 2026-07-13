@@ -15,6 +15,8 @@ export function prototypeAliases() {
         '@prototype/renderer': `${runtime}/renderer`,
         '@prototype/review': `${runtime}/review/index.js`,
         '@prototype/runtime/parseRequirementsDoc': `${runtime}/parseRequirementsDoc.js`,
+        '@prototype/runtime/requirementsPage': `${runtime}/requirementsPage/index.ts`,
+        '@prototype/runtime/changelog': `${runtime}/changelog/index.ts`,
         '@prototype/prompt': `${shell}/lib/prompt/index.js`,
     };
 }

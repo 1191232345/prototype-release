@@ -88,12 +88,7 @@ function parseCheckLine(line) {
         return { text: checked[1].trim(), checked: true };
     return null;
 }
-function parseChangelogHeading(line) {
-    const m = line.match(/^###\s+(\d{4}-\d{2}-\d{2})\s*[·•]\s*(.+)$/);
-    if (!m)
-        return null;
-    return { date: m[1], summary: m[2].trim() };
-}
+import { parseChangelogHeadingLine } from './changelog/parseChangelog';
 function flushList(blocks, items) {
     if (items.length)
         blocks.push({ type: 'list', items: [...items] });
@@ -231,7 +226,7 @@ export function parseRequirementsDoc(text) {
             const heading = line.slice(4).trim();
             if (current.title === '变更记录') {
                 finishChangelogEntry();
-                const parsed = parseChangelogHeading(line);
+                const parsed = parseChangelogHeadingLine(line);
                 if (parsed) {
                     changelogEntry = { ...parsed, body: [] };
                 }

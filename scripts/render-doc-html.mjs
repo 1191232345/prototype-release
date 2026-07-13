@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { marked } from 'marked';
+import { renderRequirementsPageForPublish } from './requirements-template.mjs';
 
 const DOC_KIND_META = {
   prd: { label: 'PRD 文档', class: 'prd' },
@@ -73,9 +74,16 @@ function addHeadingIds(html, headings) {
   });
 }
 
-export function renderDocHtml(root, markdownText, { kind, title = '' }) {
+export function renderDocHtml(root, markdownText, { kind, title = '', meta: projectMeta = null }) {
   const meta = DOC_KIND_META[kind];
   if (!meta) throw new Error(`不支持的文档类型: ${kind}`);
+
+  if (kind === 'requirements') {
+    return renderRequirementsPageForPublish(root, markdownText, {
+      meta: projectMeta || {},
+      title,
+    });
+  }
 
   const headings = extractHeadings(markdownText);
   let body = marked.parse(markdownText.trim(), { gfm: true, breaks: true });

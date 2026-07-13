@@ -268,6 +268,7 @@ export function publishProject(root, projectKey, options = {}) {
       renderDocHtml(root, fs.readFileSync(reqPath, 'utf8'), {
         kind: 'requirements',
         title: bundle.docTitle,
+        meta: bundle.meta,
       }),
       'utf8',
     );

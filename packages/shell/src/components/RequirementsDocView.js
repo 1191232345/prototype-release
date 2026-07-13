@@ -1,8 +1,10 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useEffect, useRef } from 'react';
+import { changelogRowsFromBlocks } from '@prototype/runtime/changelog';
 import { filterDocSections, parseRequirementsDoc, subsectionIcon, } from '@prototype/runtime/parseRequirementsDoc';
 import { findPrdSectionElement, scrollPrdSectionIntoView, sectionDomId } from '@prototype/review';
 import { FaIcon } from '@prototype/ui/Icon';
+import { ChangelogTable } from './ChangelogTable';
 export function RequirementsDocView({ text, compact = false, dense = false, pageScope = null, highlightKey = null, highlightTableRow = null, locateToken = 0, scrollContainerRef = null, interactive = false, onPrdPick, editable = false, sectionEditor, }) {
     const doc = parseRequirementsDoc(text);
     const scoped = filterDocSections(doc.sections, pageScope);
@@ -49,6 +51,9 @@ export function RequirementsDocView({ text, compact = false, dense = false, page
 function SectionBody({ section, dense = false, highlightTableRow = null, interactive = false, sectionAnchorId, onPrdPick, }) {
     if (!section.blocks.length) {
         return _jsx("p", { className: `text-text-muted ${dense ? 'text-xs' : 'text-sm'}`, children: "\u6682\u65E0\u5185\u5BB9" });
+    }
+    if (section.title === '变更记录') {
+        return _jsx(ChangelogTable, { rows: changelogRowsFromBlocks(section.blocks), dense: dense });
     }
     return (_jsx("div", { className: dense ? 'space-y-2' : 'space-y-4', children: section.blocks.map((block, i) => (_jsx(BlockRenderer, { block: block, sectionTitle: section.title, dense: dense, highlightTableRow: highlightTableRow, interactive: interactive, sectionAnchorId: sectionAnchorId, onPrdPick: onPrdPick }, `${section.title}-${i}`))) }));
 }
